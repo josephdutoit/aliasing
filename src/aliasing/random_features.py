@@ -23,12 +23,11 @@ def make_random_feature_problem(
     input_dim: int = 20,
     full_features: int = 128,
     noise_std: float = 0.05,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Generate a teacher signal represented in a random ReLU feature basis.
 
     Returns x_train, x_test, z_train, z_test, y_train, theta_full.
-    The last two arrays are returned separately despite the type annotation
-    above for backwards-compatible unpacking at call sites.
+    The final array is the full teacher coefficient vector.
     """
     if n_train < 1 or n_test < 1:
         raise ValueError("sample counts must be positive")
