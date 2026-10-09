@@ -27,10 +27,19 @@ from aliasing.mlp import (
 )
 
 
-def parse_int_list(value: str) -> list[int]:
+def parse_positive_int_list(value: str) -> list[int]:
     values = [int(item.strip()) for item in value.split(",") if item.strip()]
     if not values or any(item < 1 for item in values):
         raise argparse.ArgumentTypeError("expected a comma-separated list of positive integers")
+    return values
+
+
+def parse_nonnegative_int_list(value: str) -> list[int]:
+    values = [int(item.strip()) for item in value.split(",") if item.strip()]
+    if not values or any(item < 0 for item in values):
+        raise argparse.ArgumentTypeError(
+            "expected a comma-separated list of nonnegative integers"
+        )
     return values
 
 
@@ -171,12 +180,12 @@ def plot_summary(mean_rows: list[dict[str, float]], output: Path) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--widths", type=parse_int_list, default=parse_int_list("16,32,64,128,256"))
+    parser.add_argument("--widths", type=parse_positive_int_list, default=parse_positive_int_list("16,32,64,128,256"))
     parser.add_argument("--num-seeds", type=int, default=100)
     parser.add_argument("--num-workers", type=int, default=None)
     parser.add_argument("--torch-threads", type=int, default=1)
     parser.add_argument("--steps", type=int, default=5000)
-    parser.add_argument("--checkpoints", type=parse_int_list, default=parse_int_list("0,10,30,100,300,1000,3000,5000"))
+    parser.add_argument("--checkpoints", type=parse_nonnegative_int_list, default=parse_nonnegative_int_list("0,10,30,100,300,1000,3000,5000"))
     parser.add_argument("--input-dim", type=int, default=20)
     parser.add_argument("--teacher-width", type=int, default=64)
     parser.add_argument("--n-train", type=int, default=64)
