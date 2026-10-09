@@ -106,8 +106,26 @@ def hidden_aliasing_metrics(
 
         z_pinv = torch.linalg.pinv(z_train)
         projector = z_pinv @ z_train
+        projector = 0.5 * (projector + projector.T)
         identity = torch.eye(z_train.shape[1], dtype=z_train.dtype)
         null_projector = identity - projector
+
+        # The initialization representation is the reference geometry for
+        # measuring feature transport and movement of train-null directions.
+        initial_z_train = torch.relu(
+            x_train @ initial_fc1_weight.T + initial_fc1_bias[None, :]
+        )
+        initial_z_test = torch.relu(
+            x_test @ initial_fc1_weight.T + initial_fc1_bias[None, :]
+        )
+        initial_z_pinv = torch.linalg.pinv(initial_z_train)
+        initial_projector = initial_z_pinv @ initial_z_train
+        initial_projector = 0.5 * (initial_projector + initial_projector.T)
+        initial_null_projector = identity - initial_projector
+
+        alias_operator = z_test @ null_projector
+        initial_alias_operator = initial_z_test @ initial_null_projector
+
         head = model.fc2.weight.detach().reshape(-1)
         minimum_norm_head = z_pinv @ y_train
         null_head = null_projector @ head
@@ -141,6 +159,22 @@ def hidden_aliasing_metrics(
 
         train_feature_norm = torch.linalg.norm(z_train).item()
         test_feature_norm = torch.linalg.norm(z_test).item()
+        feature_transport_train = _relative_norm(
+            z_train - initial_z_train, initial_z_train
+        )
+        feature_transport_test = _relative_norm(
+            z_test - initial_z_test, initial_z_test
+        )
+        null_projector_drift = torch.linalg.matrix_norm(
+            null_projector - initial_null_projector, ord=2
+        ).item()
+        alias_operator_norm = torch.linalg.matrix_norm(alias_operator, ord=2).item()
+        initial_alias_operator_norm = torch.linalg.matrix_norm(
+            initial_alias_operator, ord=2
+        ).item()
+        alias_operator_drift = torch.linalg.matrix_norm(
+            alias_operator - initial_alias_operator, ord=2
+        ).item()
         metrics = {
             "train_mse": train_mse,
             "test_mse": test_mse,
@@ -154,6 +188,12 @@ def hidden_aliasing_metrics(
             "feature_coherence_max": feature_coherence,
             "feature_effective_rank": _effective_rank(z_test),
             "ntk_drift": ntk_drift,
+            "feature_transport_train": feature_transport_train,
+            "feature_transport_test": feature_transport_test,
+            "null_projector_drift": null_projector_drift,
+            "alias_operator_norm": alias_operator_norm,
+            "initial_alias_operator_norm": initial_alias_operator_norm,
+            "alias_operator_drift": alias_operator_drift,
             "head_null_fraction": _relative_norm(null_head, head),
             "head_minimum_norm_gap": torch.linalg.norm(head - minimum_norm_head).item(),
             "test_null_response_rms": torch.sqrt(torch.mean(test_null_response**2)).item(),

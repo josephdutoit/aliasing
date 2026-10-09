@@ -9,6 +9,9 @@ The neural experiments use the following quantities.
 - `feature_coherence_max`, `feature_effective_rank`: simple feature-sharing/superposition diagnostics.
 - `ntk_drift`: relative Frobenius drift of the empirical tangent kernel from initialization.
 - `feature_drift`: relative drift of the first-layer weights.
+- `feature_transport_train`, `feature_transport_test`: relative movement of the hidden feature matrices from initialization.
+- `null_projector_drift`: spectral-norm movement of the training-data nullspace projector.
+- `alias_operator_norm`, `initial_alias_operator_norm`, `alias_operator_drift`: spectral norm of the current test-visible nullspace operator, its initialization value, and its movement from initialization.
 - `interpolates`: whether training MSE is below the configured threshold.
 
 The MLP experiment is intentionally a feature-learning bridge between fixed/frozen features and the later modular-addition transformer. It does not claim to reproduce grokking yet. The checkpointed risk and geometry traces are designed to reveal whether any late generalization improvement is associated with decreasing aliasing, changing rank/coherence, or tangent-kernel drift.
