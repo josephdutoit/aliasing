@@ -47,13 +47,11 @@ source "${REPO_DIR}/.venv/bin/activate"
 echo "Running samplewise experiment"
 "$PYTHON" "$SCRIPT" \
     --num-workers "$NUM_WORKERS" \
-    --sweep samplewise \
     --output-dir "$OUTPUT_ROOT/samplewise"
 
 echo "Running featurewise experiment"
 "$PYTHON" "$SCRIPT" \
     --num-workers "$NUM_WORKERS" \
-    --sweep featurewise \
     --output-dir "$OUTPUT_ROOT/featurewise"
 
 echo "Completed both experiments."
