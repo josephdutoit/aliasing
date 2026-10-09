@@ -14,7 +14,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--replicates", type=int, default=8)
-    parser.add_argument("--n-test", type=int, default=256)
+    parser.add_argument("--n-test", type=int, default=4096)
     parser.add_argument("--output-dir", type=Path, default=Path("outputs/gad_geometry_pilot"))
     return parser.parse_args()
 
