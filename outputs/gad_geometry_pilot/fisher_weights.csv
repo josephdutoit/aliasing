@@ -1,0 +1,12 @@
+case,scale_or_zero_rows,effective_sample_size,positive_weight_count,unweighted_rank,weighted_numerical_rank,weighted_numerical_nullity,smallest_weighted_singular_value,condition_number,alias_trace_identity_covariance
+positive_logistic_weights,0.25,23.997872628885542,24,24,24,16,0.8728310902936924,6.387094244441922,16.0
+positive_logistic_weights,0.5,23.967528840212143,24,24,24,16,0.8537831857253734,6.346756750090353,16.0
+positive_logistic_weights,1.0,23.567841190330842,24,24,24,16,0.7810105201989017,6.295197524734864,16.0
+positive_logistic_weights,2.0,20.384122608401686,24,24,24,16,0.5442846198416785,7.063400644959527,16.0
+positive_logistic_weights,4.0,12.161562897150976,24,24,24,16,0.15927179457727614,14.782213573051576,16.0
+positive_logistic_weights,8.0,5.884387763485534,24,24,24,16,0.00869323120323848,104.53612238732909,16.0
+exact_zero_weights,0,24.0,24,24,24,16,nan,nan,16.0
+exact_zero_weights,4,20.0,20,24,20,20,nan,nan,20.0
+exact_zero_weights,8,16.0,16,24,16,24,nan,nan,24.0
+exact_zero_weights,12,12.0,12,24,12,28,nan,nan,28.0
+exact_zero_weights,16,8.0,8,24,8,32,nan,nan,32.0
