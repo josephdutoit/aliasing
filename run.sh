@@ -25,12 +25,14 @@ Run one experiment from the Aliasing repository:
   ./run.sh 02 samplewise [experiment options]
   ./run.sh 03 [experiment options]
   ./run.sh 04 [experiment options]
+  ./run.sh 05 [experiment options]
 
 Experiment aliases:
   01, linear       Fixed-feature linear baseline
   02, random       Frozen random-feature sweep (requires featurewise or samplewise)
   03, mlp          Feature-learning MLP
   04, gad            Finite-dimensional GAD geometry pilot
+  05, geometry-risk  Replicated feature-geometry and excess-risk study
 
 Examples:
   ./run.sh 01 --n-train 64 --n-full 128
@@ -38,6 +40,7 @@ Examples:
   ./run.sh 02 samplewise --sample-sizes 8,16,32,64 --num-seeds 8
   ./run.sh 03 --widths 16,32,64 --num-seeds 4 --steps 1000
   ./run.sh 04 --replicates 4 --seed 7
+  ./run.sh 05 --replicates 100 --n-test 4096
 
 The runner supplies a default output directory for each run. Pass
 --output-dir PATH to choose another one. The experiment's own options are
@@ -99,6 +102,12 @@ case "$selector" in
     04|gad|gad-pilot|geometry)
         SCRIPT="experiments/04_gad_geometry_pilot.py"
         DEFAULT_OUTPUT="outputs/gad_geometry_pilot"
+        SUPPORTS_WORKERS=0
+        EXPERIMENT_ARGS=("$@")
+        ;;
+    05|geometry-risk|feature-risk|gad-risk)
+        SCRIPT="experiments/05_feature_geometry_risk.py"
+        DEFAULT_OUTPUT="outputs/chapter2_geometry_risk"
         SUPPORTS_WORKERS=0
         EXPERIMENT_ARGS=("$@")
         ;;
