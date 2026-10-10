@@ -8,7 +8,13 @@
 
 set -euo pipefail
 
-REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -n "${SLURM_SUBMIT_DIR:-}" && -d "$SLURM_SUBMIT_DIR" ]]; then
+    # Slurm may execute a staged copy of this script from /var/spool. Resolve
+    # repository files from the directory where the job was submitted instead.
+    REPO_DIR="$(cd -- "$SLURM_SUBMIT_DIR" && pwd)"
+else
+    REPO_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+fi
 
 usage() {
     cat <<'EOF'
