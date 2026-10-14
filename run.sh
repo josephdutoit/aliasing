@@ -26,6 +26,8 @@ Run one experiment from the Aliasing repository:
   ./run.sh 03 [experiment options]
   ./run.sh 04 [experiment options]
   ./run.sh 05 [experiment options]
+  ./run.sh 06 [experiment options]
+  ./run.sh 07 [experiment options]
 
 Experiment aliases:
   01, linear       Fixed-feature linear baseline
@@ -33,6 +35,8 @@ Experiment aliases:
   03, mlp          Feature-learning MLP
   04, gad            Finite-dimensional GAD geometry pilot
   05, geometry-risk  Replicated feature-geometry and excess-risk study
+  06, superposition-exact  Exact binary GAD and support-coverage study
+  07, superposition       Continuous paired superposition and task matrices
 
 Examples:
   ./run.sh 01 --n-train 64 --n-full 128
@@ -41,6 +45,8 @@ Examples:
   ./run.sh 03 --widths 16,32,64 --num-seeds 4 --steps 1000
   ./run.sh 04 --replicates 4 --seed 7
   ./run.sh 05 --replicates 100 --n-test 4096
+  ./run.sh 06
+  ./run.sh 07 --replicates 100 --pairs 4,8 --n-test 4096
 
 The runner supplies a default output directory for each run. Pass
 --output-dir PATH to choose another one. The experiment's own options are
@@ -111,6 +117,18 @@ case "$selector" in
         SUPPORTS_WORKERS=0
         EXPERIMENT_ARGS=("$@")
         ;;
+    06|superposition-exact|sharing-exact)
+        SCRIPT="experiments/06_superposition_exact.py"
+        DEFAULT_OUTPUT="outputs/superposition_exact"
+        SUPPORTS_WORKERS=0
+        EXPERIMENT_ARGS=("$@")
+        ;;
+    07|superposition|sharing|superposition-continuous)
+        SCRIPT="experiments/07_superposition_continuous.py"
+        DEFAULT_OUTPUT="outputs/superposition_continuous"
+        SUPPORTS_WORKERS=0
+        EXPERIMENT_ARGS=("$@")
+        ;;
     *)
         echo "Unknown experiment: $selector" >&2
         usage >&2
@@ -171,3 +189,4 @@ printf 'Command:'
 printf ' %q' "$PYTHON_BIN" "$SCRIPT" "${EXPERIMENT_ARGS[@]}"
 printf '\n'
 exec "$PYTHON_BIN" "$SCRIPT" "${EXPERIMENT_ARGS[@]}"
+
