@@ -28,6 +28,7 @@ Run one experiment from the Aliasing repository:
   ./run.sh 05 [experiment options]
   ./run.sh 06 [experiment options]
   ./run.sh 07 [experiment options]
+  ./run.sh 08 [experiment options]
 
 Experiment aliases:
   01, linear       Fixed-feature linear baseline
@@ -37,6 +38,7 @@ Experiment aliases:
   05, geometry-risk  Replicated feature-geometry and excess-risk study
   06, superposition-exact  Exact binary GAD and support-coverage study
   07, superposition       Continuous paired superposition and task matrices
+  08, sample-boundary     Exact sample-size reversal for sharing versus dropping
 
 Examples:
   ./run.sh 01 --n-train 64 --n-full 128
@@ -47,6 +49,7 @@ Examples:
   ./run.sh 05 --replicates 100 --n-test 4096
   ./run.sh 06
   ./run.sh 07 --replicates 100 --pairs 4,8 --n-test 4096
+  ./run.sh 08 --max-n 64
 
 The runner supplies a default output directory for each run. Pass
 --output-dir PATH to choose another one. The experiment's own options are
@@ -126,6 +129,12 @@ case "$selector" in
     07|superposition|sharing|superposition-continuous)
         SCRIPT="experiments/07_superposition_continuous.py"
         DEFAULT_OUTPUT="outputs/superposition_continuous"
+        SUPPORTS_WORKERS=0
+        EXPERIMENT_ARGS=("$@")
+        ;;
+    08|sample-boundary|superposition-boundary)
+        SCRIPT="experiments/08_superposition_sample_boundary.py"
+        DEFAULT_OUTPUT="outputs/superposition_sample_boundary"
         SUPPORTS_WORKERS=0
         EXPERIMENT_ARGS=("$@")
         ;;

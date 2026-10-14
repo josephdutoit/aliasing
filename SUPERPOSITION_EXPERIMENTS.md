@@ -179,6 +179,18 @@ making claims near interpolation.
 
 ## What these experiments establish
 
+Study 08 adds an exact sample-size preference-reversal theorem and finite-n
+learning curves:
+
+```bash
+bash run.sh 08 --max-n 64
+```
+
+See [SUPERPOSITION_SAMPLE_THEOREM.md](SUPERPOSITION_SAMPLE_THEOREM.md) for the
+parameter interval, proof, sufficient sample bound, and interpolation scope.
+Outputs are `curves.csv`, `boundaries.csv`, `sample_boundary.png`, and
+`metadata.json` under `outputs/superposition_sample_boundary/`.
+
 The exact study verifies the binary formulas, task dependence, genuine B/A
 tradeoffs, and algorithm-dependent D reversals. The continuous study tests
 multi-pair extensions, decoder dependence, metric invariance, sample coverage,
