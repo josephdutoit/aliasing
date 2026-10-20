@@ -66,20 +66,35 @@ def evaluate_width(
     noise_vector = x_pm @ (design_pinv @ train_noise)
 
     reconstructed_error = data_vector + alias_vector + model_vector + noise_vector
-    cross_term = _squared_mean(prediction_error) - sum(
-        _squared_mean(component)
-        for component in (data_vector, alias_vector, model_vector, noise_vector)
-    )
+    components = {
+        "data": data_vector,
+        "alias": alias_vector,
+        "model": model_vector,
+        "noise": noise_vector,
+    }
+    component_cross_terms: Dict[str, float] = {}
+    component_names = list(components)
+    for i, left_name in enumerate(component_names):
+        for right_name in component_names[i + 1 :]:
+            left = components[left_name]
+            right = components[right_name]
+            component_cross_terms[f"cross_{left_name}_{right_name}"] = float(
+                2.0 * np.mean(left * right)
+            )
+    cross_term = sum(component_cross_terms.values())
 
     return {
         "d": float(d),
         "test_mse": _squared_mean(prediction_error),
         "alias_operator_norm": _operator_norm(alias_operator),
+        "alias_operator_rms_norm": _operator_norm(alias_operator)
+        / np.sqrt(max(x_test.shape[0], 1)),
         "model_insufficiency": _squared_mean(model_vector),
         "data_insufficiency": _squared_mean(data_vector),
         "aliasing": _squared_mean(alias_vector),
         "fitted_noise": _squared_mean(noise_vector),
         "component_cross_term": float(cross_term),
+        **component_cross_terms,
         "reconstruction_error": float(
             np.max(np.abs(reconstructed_error - prediction_error))
         ),
@@ -98,3 +113,4 @@ def run_sweep(
         evaluate_width(x_train, x_test, theta_full, y_train, int(d))
         for d in widths
     ]
+

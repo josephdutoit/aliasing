@@ -30,6 +30,16 @@ if [[ ! -f "$SCRIPT" ]]; then
     exit 1
 fi
 
+if [[ "$(basename "$SCRIPT")" == "04_superposition_aliasing.py" ]]; then
+    mkdir -p "$OUTPUT_ROOT/superposition"
+    cd "$REPO_DIR"
+    export MPLBACKEND=Agg
+    source "${REPO_DIR}/.venv/bin/activate"
+    echo "Running controlled superposition-aliasing experiment"
+    "$PYTHON" "$SCRIPT" --output-dir "$OUTPUT_ROOT/superposition"
+    exit 0
+fi
+
 mkdir -p "$OUTPUT_ROOT/samplewise"
 mkdir -p "$OUTPUT_ROOT/featurewise"
 
@@ -55,3 +65,4 @@ echo "Running featurewise experiment"
     --output-dir "$OUTPUT_ROOT/featurewise"
 
 echo "Completed both experiments."
+

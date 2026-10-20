@@ -4,15 +4,15 @@ import argparse
 import csv
 import multiprocessing as mp
 import os
-from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Mapping
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 from aliasing.linear import evaluate_width, run_sweep
 from aliasing.random_features import make_random_feature_problem
+from aliasing.summaries import aggregate_seed_rows, adjacent_paired_contrasts
 
 
 def parse_int_list(value: str) -> List[int]:
@@ -97,7 +97,7 @@ def flatten(rows: Iterable[List[Dict[str, float]]]) -> List[Dict[str, float]]:
     return [row for batch in rows for row in batch]
 
 
-def write_csv(path: Path, rows: List[Dict[str, float]]) -> None:
+def write_csv(path: Path, rows: List[Mapping[str, object]]) -> None:
     if not rows:
         raise ValueError("cannot write an empty result")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -107,46 +107,36 @@ def write_csv(path: Path, rows: List[Dict[str, float]]) -> None:
         writer.writerows(rows)
 
 
-def aggregate(rows: List[Dict[str, float]]) -> tuple[List[Dict[str, float]], List[Dict[str, float]]]:
-    grouped = defaultdict(list)
-    for row in rows:
-        grouped[row["sweep_value"]].append(row)
-
-    mean_rows = []
-    std_rows = []
-    for value in sorted(grouped):
-        group = grouped[value]
-        numeric_keys = [
-            key for key, item in group[0].items()
-            if key not in {"seed", "sweep_value"}
-        ]
-        mean_row = {"sweep_value": value, "num_runs": float(len(group))}
-        std_row = {"sweep_value": value, "num_runs": float(len(group))}
-        for key in numeric_keys:
-            values = np.array([item[key] for item in group], dtype=float)
-            mean_row[key] = float(np.nanmean(values))
-            std_row[key] = float(np.nanstd(values))
-        mean_rows.append(mean_row)
-        std_rows.append(std_row)
-    return mean_rows, std_rows
+def aggregate(rows: List[Dict[str, float]]):
+    return aggregate_seed_rows(
+        rows,
+        group_keys=("sweep_value",),
+        excluded_keys={"seed", "sweep_value"},
+    )
 
 
-def plot_means(mean_rows: List[Dict[str, float]], args: argparse.Namespace) -> None:
+def plot_means(
+    mean_rows: List[Dict[str, float]],
+    ci_rows: List[Dict[str, float]],
+    args: argparse.Namespace,
+) -> None:
     x = np.array([row["sweep_value"] for row in mean_rows])
-    test_mse = np.array([row["test_mse"] for row in mean_rows])
-    alias_norm = np.array([row["alias_operator_norm"] for row in mean_rows])
-    aliasing = np.array([row["aliasing"] for row in mean_rows])
+    tiny = np.finfo(float).tiny
+    ci_by_x = {row["sweep_value"]: row for row in ci_rows}
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 4), constrained_layout=True)
-    axes[0].plot(x, test_mse, marker=".")
-    axes[0].set_yscale("log")
-    axes[0].set_title("Test MSE")
-    axes[1].plot(x, alias_norm, marker=".", color="tab:orange")
-    axes[1].set_yscale("log")
-    axes[1].set_title("Aliasing operator norm")
-    axes[2].plot(x, aliasing, marker=".", color="tab:green")
-    axes[2].set_yscale("log")
-    axes[2].set_title("Aliasing energy")
+    for axis, key, title, color in (
+        (axes[0], "test_mse", "Test MSE", "tab:blue"),
+        (axes[1], "alias_operator_rms_norm", "RMS alias-operator norm", "tab:orange"),
+        (axes[2], "aliasing", "Aliasing energy", "tab:green"),
+    ):
+        mean = np.asarray([row[key] for row in mean_rows])
+        low = np.asarray([ci_by_x[value][f"{key}_ci95_low"] for value in x])
+        high = np.asarray([ci_by_x[value][f"{key}_ci95_high"] for value in x])
+        axis.plot(x, np.maximum(mean, tiny), marker=".", color=color)
+        axis.fill_between(x, np.maximum(low, tiny), np.maximum(high, tiny), color=color, alpha=0.2)
+        axis.set_yscale("log")
+        axis.set_title(title)
     xlabel = "modeled feature count" if args.sweep == "featurewise" else "training sample count"
     for axis in axes:
         axis.set_xlabel(xlabel)
@@ -169,14 +159,24 @@ def main() -> None:
         batches = pool.map(_worker, tasks)
 
     rows = flatten(batches)
-    mean_rows, std_rows = aggregate(rows)
+    mean_rows, std_rows, ci_rows = aggregate(rows)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     write_csv(args.output_dir / "raw.csv", rows)
     write_csv(args.output_dir / "mean.csv", mean_rows)
     write_csv(args.output_dir / "std.csv", std_rows)
-    plot_means(mean_rows, args)
+    write_csv(args.output_dir / "ci95.csv", ci_rows)
+    if args.sweep == "featurewise":
+        contrasts = adjacent_paired_contrasts(
+            rows,
+            level_key="sweep_value",
+            match_keys=("seed",),
+            excluded_keys={"seed", "sweep_value", "d"},
+        )
+        write_csv(args.output_dir / "paired_contrasts.csv", contrasts)
+    plot_means(mean_rows, ci_rows, args)
     print(f"Wrote {len(rows)} raw rows to {args.output_dir}")
 
 
 if __name__ == "__main__":
     main()
+

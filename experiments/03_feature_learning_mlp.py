@@ -12,7 +12,6 @@ import argparse
 import csv
 import multiprocessing as mp
 import os
-from collections import defaultdict
 from pathlib import Path
 from typing import Iterable, Mapping
 
@@ -25,6 +24,7 @@ from aliasing.mlp import (
     make_teacher_problem,
     seed_everything,
 )
+from aliasing.summaries import aggregate_seed_rows, adjacent_paired_contrasts
 
 
 def parse_positive_int_list(value: str) -> list[int]:
@@ -121,7 +121,7 @@ def flatten(groups: Iterable[list[dict[str, float]]]) -> list[dict[str, float]]:
     return [row for group in groups for row in group]
 
 
-def write_rows(path: Path, rows: list[Mapping[str, float]]) -> None:
+def write_rows(path: Path, rows: list[Mapping[str, object]]) -> None:
     if not rows:
         raise ValueError("no rows to write")
     fieldnames = list(rows[0].keys())
@@ -131,29 +131,21 @@ def write_rows(path: Path, rows: list[Mapping[str, float]]) -> None:
         writer.writerows(rows)
 
 
-def aggregate(rows: list[dict[str, float]]) -> tuple[list[dict[str, float]], list[dict[str, float]]]:
-    grouped: dict[tuple[float, float], list[dict[str, float]]] = defaultdict(list)
-    for row in rows:
-        grouped[(row["width"], row["step"])].append(row)
-    mean_rows: list[dict[str, float]] = []
-    std_rows: list[dict[str, float]] = []
-    excluded = {"seed", "width", "step"}
-    for (width, step), group in sorted(grouped.items()):
-        mean_row = {"width": width, "step": step}
-        std_row = {"width": width, "step": step}
-        for key in group[0]:
-            if key in excluded:
-                continue
-            values = np.asarray([row[key] for row in group], dtype=float)
-            mean_row[key] = float(np.nanmean(values))
-            std_row[key] = float(np.nanstd(values))
-        mean_rows.append(mean_row)
-        std_rows.append(std_row)
-    return mean_rows, std_rows
+def aggregate(rows: list[dict[str, float]]):
+    return aggregate_seed_rows(
+        rows,
+        group_keys=("width", "step"),
+        excluded_keys={"seed", "width", "step"},
+    )
 
 
-def plot_summary(mean_rows: list[dict[str, float]], output: Path) -> None:
+def plot_summary(
+    mean_rows: list[dict[str, float]],
+    ci_rows: list[dict[str, float]],
+    output: Path,
+) -> None:
     widths = sorted({row["width"] for row in mean_rows})
+    ci_by_group = {(row["width"], row["step"]): row for row in ci_rows}
     fig, axes = plt.subplots(2, 2, figsize=(12, 8), constrained_layout=True)
     panels = [
         ("test_mse", "test MSE", True),
@@ -161,6 +153,7 @@ def plot_summary(mean_rows: list[dict[str, float]], output: Path) -> None:
         ("test_null_response_rms", "test null-head response RMS", True),
         ("feature_drift", "hidden-weight drift", False),
     ]
+    tiny = np.finfo(float).tiny
     for axis, (key, label, log_y) in zip(axes.flat, panels):
         for width in widths:
             selected = [row for row in mean_rows if row["width"] == width]
@@ -168,6 +161,15 @@ def plot_summary(mean_rows: list[dict[str, float]], output: Path) -> None:
             x = [row["step"] for row in selected]
             y = [max(row[key], np.finfo(float).tiny) for row in selected]
             axis.plot(x, y, marker="o", label=f"width={int(width)}")
+            low = [
+                max(ci_by_group[(width, row["step"])][f"{key}_ci95_low"], tiny)
+                for row in selected
+            ]
+            high = [
+                max(ci_by_group[(width, row["step"])][f"{key}_ci95_high"], tiny)
+                for row in selected
+            ]
+            axis.fill_between(x, low, high, alpha=0.14)
         axis.set_xlabel("optimization step")
         axis.set_ylabel(label)
         if log_y:
@@ -215,11 +217,20 @@ def main() -> None:
 
     rows.sort(key=lambda row: (row["width"], row["step"], row["seed"]))
     write_rows(args.output_dir / "raw.csv", rows)
-    mean_rows, std_rows = aggregate(rows)
+    mean_rows, std_rows, ci_rows = aggregate(rows)
     write_rows(args.output_dir / "mean.csv", mean_rows)
     write_rows(args.output_dir / "std.csv", std_rows)
-    plot_summary(mean_rows, args.output_dir / "mlp_aliasing.png")
+    write_rows(args.output_dir / "ci95.csv", ci_rows)
+    contrasts = adjacent_paired_contrasts(
+        rows,
+        level_key="width",
+        match_keys=("seed", "step"),
+        excluded_keys={"seed", "width", "step"},
+    )
+    write_rows(args.output_dir / "paired_width_contrasts.csv", contrasts)
+    plot_summary(mean_rows, ci_rows, args.output_dir / "mlp_aliasing.png")
 
 
 if __name__ == "__main__":
     main()
+

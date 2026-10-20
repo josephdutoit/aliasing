@@ -87,12 +87,14 @@ def hidden_aliasing_metrics(
     initial_fc2_weight: torch.Tensor,
     interpolation_threshold: float = 1e-10,
 ) -> dict[str, float]:
-    """Measure interpolation, hidden-feature aliasing, and feature drift.
+    """Measure frozen-representation readout ambiguity and feature drift.
 
-    For the current hidden matrix Z_train, the least-norm output head is
-    Z_train^+ y_train.  The residual head component in ker(Z_train) is the
-    exact finite-sample aliasing direction.  Its test effect is nonzero when
-    the hidden features have changed outside the sampled data geometry.
+    Let Z_train and Z_test be the current hidden-feature matrices, a the
+    trained output head, and Q = I - Z_train^+ Z_train. Then Z_train Q = 0,
+    so a and (I-Q)a give identical training predictions. Their test
+    prediction difference is exactly Z_test Q a. This is readout ambiguity
+    conditional on the current hidden representation; it is not a measure
+    of total network risk or of feature superposition.
     """
     model.eval()
     with torch.no_grad():
@@ -147,14 +149,14 @@ def hidden_aliasing_metrics(
 
         singular_values = torch.linalg.svdvals(z_train)
         leading = singular_values[0].item() if singular_values.numel() else 0.0
-        tolerance = max(z_train.shape) * torch.finfo(z_train.dtype).eps * max(leading, 1.0)
+        tolerance = max(z_train.shape) * torch.finfo(z_train.dtype).eps * leading
         positive = singular_values[singular_values > tolerance]
         rank = int(positive.numel())
         condition_log10 = float("nan")
         if positive.numel() > 1:
             condition_log10 = float(torch.log10(positive[0] / positive[-1]).item())
 
-        feature_coherence = _feature_coherence(z_test)
+        activation_pattern_correlation = _activation_pattern_correlation(z_test)
         ntk_drift = _relative_norm(current_ntk - initial_ntk, initial_ntk)
 
         train_feature_norm = torch.linalg.norm(z_train).item()
@@ -175,6 +177,8 @@ def hidden_aliasing_metrics(
         alias_operator_drift = torch.linalg.matrix_norm(
             alias_operator - initial_alias_operator, ord=2
         ).item()
+        test_null_response_rms = torch.sqrt(torch.mean(test_null_response**2)).item()
+        test_prediction_rms = torch.sqrt(torch.mean(pred_test**2)).item()
         metrics = {
             "train_mse": train_mse,
             "test_mse": test_mse,
@@ -185,20 +189,29 @@ def hidden_aliasing_metrics(
             if singular_values.numel()
             else 0.0,
             "hidden_singular_value_min": float(positive[-1].item()) if positive.numel() else 0.0,
-            "feature_coherence_max": feature_coherence,
+            "activation_pattern_correlation_max": activation_pattern_correlation,
             "feature_effective_rank": _effective_rank(z_test),
             "ntk_drift": ntk_drift,
             "feature_transport_train": feature_transport_train,
             "feature_transport_test": feature_transport_test,
             "null_projector_drift": null_projector_drift,
             "alias_operator_norm": alias_operator_norm,
+            "alias_operator_rms_norm": alias_operator_norm
+            / np.sqrt(max(z_test.shape[0], 1)),
             "initial_alias_operator_norm": initial_alias_operator_norm,
+            "initial_alias_operator_rms_norm": initial_alias_operator_norm
+            / np.sqrt(max(z_test.shape[0], 1)),
             "alias_operator_drift": alias_operator_drift,
+            "alias_operator_rms_drift": alias_operator_drift
+            / np.sqrt(max(z_test.shape[0], 1)),
             "head_null_fraction": _relative_norm(null_head, head),
+            # This is not generally the null-head norm when the model does
+            # not interpolate: it also includes the row-space fit residual.
             "head_minimum_norm_gap": torch.linalg.norm(head - minimum_norm_head).item(),
-            "test_null_response_rms": torch.sqrt(torch.mean(test_null_response**2)).item(),
-            "test_null_response_relative": torch.linalg.norm(test_null_response).item()
-            / max(test_feature_norm * max(torch.linalg.norm(null_head).item(), 1.0), np.finfo(float).eps),
+            "test_null_response_rms": test_null_response_rms,
+            "test_prediction_rms": test_prediction_rms,
+            "test_null_response_relative": test_null_response_rms
+            / max(test_prediction_rms, np.finfo(float).eps),
             "feature_drift": _relative_norm(
                 model.fc1.weight.detach() - initial_fc1_weight,
                 initial_fc1_weight,
@@ -221,7 +234,12 @@ def _output_jacobian_features(
     return torch.cat((active, hidden_weight.reshape(x.shape[0], -1), hidden_bias), dim=1)
 
 
-def _feature_coherence(features: torch.Tensor) -> float:
+def _activation_pattern_correlation(features: torch.Tensor) -> float:
+    """Maximum absolute correlation between hidden-unit activation patterns.
+
+    This measures similarity of unit activity across the supplied examples;
+    it is not a direct measure of latent feature directions in superposition.
+    """
     centered = features - features.mean(dim=0, keepdim=True)
     norms = torch.linalg.norm(centered, dim=0)
     valid = norms > torch.finfo(features.dtype).eps
@@ -240,3 +258,4 @@ def _effective_rank(features: torch.Tensor) -> float:
     if total <= np.finfo(float).eps:
         return 0.0
     return float((total * total / squared.square().sum()).item())
+
