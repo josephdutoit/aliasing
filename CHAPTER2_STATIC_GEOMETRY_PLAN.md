@@ -24,32 +24,32 @@ Work from the existing implementations and definitions before adding new code:
 
 Do not duplicate these experiments. Preserve their result files. Do not interpret `activation_pattern_correlation_max` as a superposition measure; it measures similarity of activation patterns. Chapter 2 analyzes trained checkpoints as static representations. Do not add a training-trajectory or grokking claim here; those belong to the dynamics chapter.
 
-The NeurIPS 2022 paper “Feature Learning in L2-regularized DNNs: Attraction/Repulsion and Sparsity” motivates measuring hidden-layer sample Gram geometry and width plateaus. For a layer activation matrix (Z\in\mathbb R^{m\times n}) with (n) examples, record
-[
+The NeurIPS 2022 paper “Feature Learning in L2-regularized DNNs: Attraction/Repulsion and Sparsity” motivates measuring hidden-layer sample Gram geometry and width plateaus. For a layer activation matrix $Z\in\mathbb R^{m\times n}$ with n examples, record
+$$
 K=Z^\top Z,\qquad K_\sigma=\operatorname{ReLU}(Z)^\top\operatorname{ReLU}(Z).
-]
+$$
 These are **sample-geometry/compressibility diagnostics**. The paper's minimum atom count for a covariance pair is not the number of latent features represented in superposition, and its global-optimum width theorem is not verified merely by a finite-seed training sweep.
 
 ## Quantities to keep distinct
 
 ### 1. Task-relevant aliasing for fixed features
 
-Use the repository's existing GAD conventions and exact decompositions. In the scalar noiseless linear case, with training design (Z_T\in\mathbb R^{n_T\times p}), target coefficients \(\beta\), population feature covariance \(\Sigma\), and
-[
+Use the repository's existing GAD conventions and exact decompositions. In the scalar noiseless linear case, with training design $Z_T\in\mathbb R^{n_T\times p}$, target coefficients $\beta$, population feature covariance $\Sigma$, and
+$$
 Q_T=I-Z_T^\dagger Z_T,
-]
-the minimum-norm fitted coefficient is \(\widehat\beta=Z_T^\dagger Z_T\beta\), and its population squared prediction error is
-[
+$$
+the minimum-norm fitted coefficient is $\widehat\beta=Z_T^\dagger Z_T\beta$, and its population squared prediction error is
+$$
 A_T=\beta^\top Q_T\Sigma Q_T\beta.
-]
+$$
 This is the task-relevant training-nullspace contribution. With noise, multiple outputs, or other GAD terms, use and numerically verify the formulas in `MATHEMATICAL_RESULTS.md`; do not silently replace the full decomposition with this special case.
 
 Report direct held-out risk alongside each decomposed term. Include cross-terms when required by the exact identity.
 
 ### 2. Feature superposition and sparse decodability
 
-In a controlled representation (h=Ds), let (D\in\mathbb R^{m\times p}) map (p) known latent features into (m) representation dimensions. Report:
-- feature-to-dimension ratio (p/m);
+In a controlled representation $h=Ds$, let $D\in\mathbb R^{m\times p}$ map p known latent features into m representation dimensions. Report:
+- feature-to-dimension ratio $p/m$;
 - normalized feature-direction coherence;
 - support-conditioned minimum singular value
   [
@@ -59,7 +59,7 @@ In a controlled representation (h=Ds), let (D\in\mathbb R^{m\times p}) map (p) k
 - exact collision probability on the specified code distribution;
 - reconstruction or feature-recovery error.
 
-For codes with at most (k) active features, exact sparse-code injectivity is equivalent to there being no nonzero (2k)-sparse vector in \(\ker D\), i.e. \(\kappa_{2k}(D)>0\). Compute this exactly by support enumeration only for small dimensions where feasible. For larger cases, label estimates or bounds honestly. Separate exact collisions from near-collisions caused by small nonzero singular values.
+For codes with at most k active features, exact sparse-code injectivity is equivalent to there being no nonzero $2k$-sparse vector in $\ker D$, i.e. $\kappa_{2k}(D)>0$. Compute this exactly by support enumeration only for small dimensions where feasible. For larger cases, label estimates or bounds honestly. Separate exact collisions from near-collisions caused by small nonzero singular values.
 
 ### 3. Sample-geometry compressibility
 
@@ -76,9 +76,9 @@ For each selected layer/checkpoint, report (K,K_\sigma) spectral summaries (incl
 
 ### Phase 1 — broaden the exact controlled geometry
 
-Extend the existing `04_superposition_aliasing.py` experiment or add a clearly named successor. Retain its (D_r) case as a regression control and add a small, reproducible factorial design:
+Extend the existing `04_superposition_aliasing.py` experiment or add a clearly named successor. Retain its $D_r$ case as a regression control and add a small, reproducible factorial design:
 
-- dictionary families: orthogonal baseline, structured (D_r), and seeded normalized random/coherent dictionaries;
+- dictionary families: orthogonal baseline, structured $D_r$, and seeded normalized random/coherent dictionaries;
 - overcompleteness (p/m\in\{1, 1.5, 2\}) where dimensions permit;
 - sparse support sizes (k\in\{1,2,3\}) for small (p);
 - code distributions with and without feature co-occurrence;
@@ -90,7 +90,7 @@ Include four explicit controls:
 3. finite-sample aliasing without superposition (for example, an orthogonal feature direction absent from training);
 4. superposition with a supported pair of distinct codes that collide.
 
-For each case compute exact or support-enumerated collision statistics, \(\kappa_{2k}\) when tractable, GAD terms for the downstream fixed-feature task, direct population/held-out risk, and feature recovery. Preserve the same dictionary and data-generation seed for paired comparisons across sample sizes. Keep the sweep small enough that exact support enumeration is practical.
+For each case compute exact or support-enumerated collision statistics, $\kappa_{2k}$ when tractable, GAD terms for the downstream fixed-feature task, direct population/held-out risk, and feature recovery. Preserve the same dictionary and data-generation seed for paired comparisons across sample sizes. Keep the sweep small enough that exact support enumeration is practical.
 
 ### Phase 2 — test the relationship in trained networks
 
@@ -108,8 +108,8 @@ Do not interpret a frozen-head response as total test risk. Do not infer superpo
 ### Phase 3 — width plateaus and double descent
 
 Only after Phases 0–2 pass, run modest width and sample-size sweeps:
-- samplewise: vary (n_T) at fixed latent task and feature dimension;
-- featurewise: vary (p) or bottleneck width at fixed sample count and data-generation protocol;
+- samplewise: vary $n_T$ at fixed latent task and feature dimension;
+- featurewise: vary $p$ or bottleneck width at fixed sample count and data-generation protocol;
 - width: record train objective/test risk and covariance diagnostics across widths.
 
 Report samplewise and featurewise double-descent curves only when the tested range actually spans the interpolation or peak region. A plateau from finite optimization is an *observed trained-width plateau*, not evidence that a global optimum theorem was reached. Pair seeds where the data-generation design allows it and state what randomness each confidence interval summarizes.
