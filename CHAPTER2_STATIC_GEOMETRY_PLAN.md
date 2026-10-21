@@ -52,10 +52,10 @@ In a controlled representation $h=Ds$, let $D\in\mathbb R^{m\times p}$ map p kno
 - feature-to-dimension ratio $p/m$;
 - normalized feature-direction coherence;
 - support-conditioned minimum singular value
-  [
+$$
   \kappa_{2k}(D)=
   \min_{\|v\|_2=1,\;\|v\|_0\le 2k}\|Dv\|_2;
-  ]
+$$
 - exact collision probability on the specified code distribution;
 - reconstruction or feature-recovery error.
 
