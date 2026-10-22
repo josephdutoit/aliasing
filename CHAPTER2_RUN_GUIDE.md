@@ -132,11 +132,14 @@ the GAD alias component; it also plots readout sample-size convergence.
 ## Results to preserve and upload
 
 Each script writes `raw.csv`, `mean.csv`, `std.csv`, `ci95.csv`, `config.csv`,
-and `run_manifest.json` alongside its PNG figures. Preserve and commit the
-entire experiment output directory, not only the PNGs. The raw rows and
-manifest are needed to check seed variation, run settings, and the decomposition
-identities. For experiments 09–11, inspect `max_risk_identity_error` in the
-manifest; for experiment 11 also check `max_formula_error` and the per-row
+and `run_manifest.json` alongside its PNG figures. Keep `raw.csv` in the
+cluster's experiment archive; it can be very large and does not need to be
+committed for an initial review. Commit the PNGs plus `mean.csv`, `ci95.csv`,
+`config.csv`, and `run_manifest.json`. The aggregate tables and manifest are
+enough to check the plotted seed means, pointwise intervals, run settings, and
+decomposition identities. Keep `std.csv` with the archive if disk allows. For
+experiments 09–11, inspect `max_risk_identity_error` in the manifest; for
+experiment 11 also check `max_formula_error` and the per-row
 `balanced_exact_alias_control` field.
 
 Experiment 11 treats only `separation == 0` as an exact collision. Small
