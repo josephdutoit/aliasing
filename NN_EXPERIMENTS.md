@@ -96,6 +96,49 @@ This controlled example isolates a static geometric mechanism. It does not
 claim that activation correlation in a trained MLP measures superposition;
 the MLP's null-head response remains a separate, readout-specific diagnostic.
 
+## 4. Static dictionary geometry and finite-sample aliasing
+
+`experiments/05_static_dictionary_geometry.py` compares orthogonal, random,
+and structured dictionaries over code sparsity and training sample size. It
+reports feature-direction coherence, the support-enumerated minimum singular
+value, representation Bayes risk, and a finite-support GAD decomposition.
+
+Pilot:
+
+```bash
+python experiments/05_static_dictionary_geometry.py \
+  --dimension 4 \
+  --feature-counts 4,5,8 \
+  --max-sparsities 1,2 \
+  --sample-sizes 8,16 \
+  --num-seeds 3 \
+  --output-dir outputs/chapter2/05_pilot
+```
+
+## 5. Trained sparse-feature geometry
+
+`experiments/06_trained_sparse_feature_geometry.py` trains a sparse-feature
+autoencoder with known latent features. At its final checkpoint it measures
+feature-intervention directions, reconstruction, codebook collisions,
+frozen linear-probe risk and its GAD decomposition, and pre/post-ReLU sample
+Gram summaries.
+
+Pilot:
+
+```bash
+python experiments/06_trained_sparse_feature_geometry.py \
+  --feature-counts 6 \
+  --bottlenecks 2 \
+  --sample-sizes 16,32 \
+  --num-seeds 2 \
+  --n-test 512 \
+  --epochs 150 \
+  --output-dir outputs/chapter2/06_pilot
+```
+
+See [CHAPTER2_RUN_GUIDE.md](CHAPTER2_RUN_GUIDE.md) for installs, default
+sweeps, cluster commands, output definitions, and interpretation notes.
+
 ## HPC guidance
 
 Use one process per independent seed/width task and keep each worker's BLAS
