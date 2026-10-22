@@ -31,11 +31,11 @@ def make_dictionary(
         if not 1 <= spread <= dimension:
             raise ValueError("spread must be between one and dimension")
         columns = [np.eye(dimension)[:, j] for j in range(dimension)]
+        support_sets = list(combinations(range(dimension), spread))
         for index in range(feature_count - dimension):
             direction = np.zeros(dimension)
-            start = (index * spread) % dimension
-            coords = [(start + j) % dimension for j in range(spread)]
-            direction[coords] = 1.0 / np.sqrt(spread)
+            coords = support_sets[index % len(support_sets)]
+            direction[list(coords)] = 1.0 / np.sqrt(spread)
             columns.append(direction)
         dictionary = np.column_stack(columns)
     else:
