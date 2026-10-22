@@ -77,7 +77,7 @@ risk and its finite-support decomposition, and pre/post-ReLU sample Gram
 summaries. It does not use activation-pattern correlation as a superposition
 metric. Exact codebook diagnostics are limited to at most 16 input features.
 
-## Experiments 07–10: hypothesis tests
+## Experiments 07–11: hypothesis tests
 
 The new experiments focus on rival explanations and use repeated seeds. Run
 each independently with `run.sh`:
@@ -87,6 +87,7 @@ sbatch run.sh experiments/07_static_geometry_factorial.py outputs/chapter2
 sbatch run.sh experiments/08_trained_superposition_aliasing.py outputs/chapter2
 sbatch run.sh experiments/09_double_descent_decomposition.py outputs/chapter2
 sbatch run.sh experiments/10_near_collision_noise.py outputs/chapter2
+sbatch run.sh experiments/11_collision_mass_law.py outputs/chapter2
 ```
 
 Experiment 07 holds the marginal activity of a feature pair fixed while
@@ -112,6 +113,13 @@ and adds Gaussian observation noise. It compares the quadrature-computed Bayes
 risk with finite-sample affine-readout risk and its GAD terms. This is a
 controlled robustness model for approximate, rather than exact, collisions.
 
+Experiment 11 is the sharp exact control: at zero separation, its contrast-task
+Bayes risk must equal `collision_mass * conditional_positive_mass * (1 -
+conditional_positive_mass) * target_gap**2`. The common-target task should have
+zero Bayes risk even though the represented states collide. It is the fastest
+check that the collision diagnostic measures target aliasing rather than
+geometric overlap alone.
+
 For a focused smoke run, set the relevant environment variables before
 submission. For example:
 
@@ -123,8 +131,9 @@ sbatch --export=ALL run.sh experiments/07_static_geometry_factorial.py outputs/c
 
 Full default sweeps are intentionally substantial. Override `NUM_SEEDS`,
 `FEATURE_COUNTS`, `SAMPLE_SIZES`, `JOINT_PROBABILITIES`, `TASKS`, `WIDTHS`,
-`COVARIANCES`, `SEPARATIONS`, `NOISE_LEVELS`, `PRIORS`, `EPOCHS`, and `N_TEST`
-as needed for a pilot or a larger run.
+`COVARIANCES`, `SEPARATIONS`, `NOISE_LEVELS`, `PRIORS`, `COLLISION_MASSES`,
+`CONDITIONAL_MASSES`, `EPOCHS`, and `N_TEST` as needed for a pilot or larger
+run.
 The hypothesis-to-metric mapping and interpretation rules are in
 `STATIC_GEOMETRY_HYPOTHESES.md`.
 

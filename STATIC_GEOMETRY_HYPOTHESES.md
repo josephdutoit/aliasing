@@ -16,6 +16,7 @@ experiment includes controls that can falsify the proposed link.
 | H6 | Double-descent spikes should be attributed to the GAD component that carries them, not inferred from the curve shape. | Replicated spikes coincide with a rise in alias energy or data/algorithm error and a measurable rank/conditioning transition. | Spikes disappear over seeds, are numerical artifacts, or occur without a corresponding GAD component change. |
 | H7 | Distribution covariance and task alignment change which representation directions are practically relevant even when the encoder is fixed. | Isotropic, spiked, and low-rank input laws produce distinct task-conditioned aliasing under the same random-feature construction. | The effects vanish under matched paired simulations and adequate test sets. |
 | H8 | Near-collisions create a noise- and task-dependent transition from recoverable codes to practical aliasing. | The exact noisy-channel Bayes floor changes with separation/noise ratio and target contrast, and finite-sample linear risk tracks it in the appropriate regime. | Risk is insensitive to separation/noise or tracks sample conditioning alone. |
+| H9 | Exact collision risk follows the conditional-variance law and vanishes for target-invariant collisions. | Risk matches \(c\rho(1-\rho)\Delta^2\) across collision mass \(c\), conditional mass \(\rho\), and target gap \(\Delta\), but is zero for the common-target control. | The exact formula fails or risk does not depend on target disagreement. |
 
 ## New scripts
 
@@ -58,6 +59,15 @@ sample size in an exactly solvable two-state channel. Gauss-Hermite quadrature
 supplies the Bayes risk; Monte Carlo test draws supply affine-readout and GAD
 terms. It tests whether approximate overlap acts like practical aliasing once
 observation noise is present.
+
+### 11 — `experiments/11_collision_mass_law.py`
+
+Implements a three-state support with a pair of hidden states whose separation
+is controlled exactly. For zero separation, its contrast-task Bayes risk must
+equal \(c\rho(1-\rho)\Delta^2\); a common-target control has no collision
+penalty. The sweep independently varies collision mass, pair imbalance,
+separation, target task, and readout sample size. `formula_error` directly
+checks the exact risk law.
 
 ## Reading the results
 

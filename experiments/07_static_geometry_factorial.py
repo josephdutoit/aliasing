@@ -199,8 +199,8 @@ def main() -> None:
         "num_seeds": args.num_seeds, "seed": args.seed,
     }])
 
-    # Plot only the most theory-facing quantities. Each line is one family/task/
-    # co-occurrence condition; uncertainty bands are seed-bootstrap intervals.
+    # Plot the most theory-facing quantities. Seed-bootstrap intervals are
+    # saved separately in ci95.csv to keep these multi-condition plots legible.
     panels = (("test_mse", "held-out risk"), ("model_insufficiency", "linear model insufficiency"),
               ("aliasing", "finite-sample alias component"),
               ("representation_bayes_mse", "representation Bayes risk"))

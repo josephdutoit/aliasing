@@ -145,6 +145,23 @@ if [[ "$(basename "$SCRIPT")" == "10_near_collision_noise.py" ]]; then
     exit 0
 fi
 
+if [[ "$(basename "$SCRIPT")" == "11_collision_mass_law.py" ]]; then
+    OUT_DIR="$OUTPUT_ROOT/collision_mass_law"
+    mkdir -p "$OUT_DIR"
+    cd "$REPO_DIR"
+    export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 MPLBACKEND=Agg
+    source "${REPO_DIR}/.venv/bin/activate"
+    "$PYTHON" "$SCRIPT" \
+        --collision-masses "${COLLISION_MASSES:-0.1,0.25,0.5,0.75,0.9}" \
+        --conditional-masses "${CONDITIONAL_MASSES:-0.1,0.25,0.5,0.75,0.9}" \
+        --separations "${SEPARATIONS:-0,1e-8,1e-5,1e-3,0.01,0.1,0.5}" \
+        --tasks "${TASKS:-contrast,common}" \
+        --sample-sizes "${SAMPLE_SIZES:-4,8,16,32,64,128}" \
+        --num-seeds "${NUM_SEEDS:-100}" \
+        --output-dir "$OUT_DIR"
+    exit 0
+fi
+
 mkdir -p "$OUTPUT_ROOT/samplewise"
 mkdir -p "$OUTPUT_ROOT/featurewise"
 
