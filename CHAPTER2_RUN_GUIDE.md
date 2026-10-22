@@ -77,6 +77,57 @@ risk and its finite-support decomposition, and pre/post-ReLU sample Gram
 summaries. It does not use activation-pattern correlation as a superposition
 metric. Exact codebook diagnostics are limited to at most 16 input features.
 
+## Experiments 07–10: hypothesis tests
+
+The new experiments focus on rival explanations and use repeated seeds. Run
+each independently with `run.sh`:
+
+```bash
+sbatch run.sh experiments/07_static_geometry_factorial.py outputs/chapter2
+sbatch run.sh experiments/08_trained_superposition_aliasing.py outputs/chapter2
+sbatch run.sh experiments/09_double_descent_decomposition.py outputs/chapter2
+sbatch run.sh experiments/10_near_collision_noise.py outputs/chapter2
+```
+
+Experiment 07 holds the marginal activity of a feature pair fixed while
+changing their joint activation probability. It tests five tasks against
+random and structured dictionaries and separates exact representation risk,
+linear model insufficiency, finite-sample aliasing, and data/algorithm error.
+Its exact binary codebook is limited to 16 features.
+
+Experiment 08 trains each sparse autoencoder once, freezes it, then evaluates
+four target tasks over multiple readout sample sizes. Exact collision metrics
+enumerate all binary inputs and are therefore limited to 12 features. The
+reported confidence intervals use the independently trained representation
+seeds; repeated readout draws are first averaged within each seed.
+
+Experiment 09 builds paired random-feature designs and evaluates the full
+sample-size-by-width grid under several input covariances and task alignments.
+It records rank, condition number, and all GAD terms at each point. Output
+directories contain raw rows, means, standard deviations, pointwise 95%
+bootstrap intervals, a config file, and a PNG.
+
+Experiment 10 varies the separation between two target-distinct hidden states
+and adds Gaussian observation noise. It compares the quadrature-computed Bayes
+risk with finite-sample affine-readout risk and its GAD terms. This is a
+controlled robustness model for approximate, rather than exact, collisions.
+
+For a focused smoke run, set the relevant environment variables before
+submission. For example:
+
+```bash
+export NUM_SEEDS=3 FEATURE_COUNTS=6,8 SAMPLE_SIZES=8,16,32
+export JOINT_PROBABILITIES=0,0.1,0.2 TASKS=random,decoder_null FAMILIES=random,structured
+sbatch --export=ALL run.sh experiments/07_static_geometry_factorial.py outputs/chapter2
+```
+
+Full default sweeps are intentionally substantial. Override `NUM_SEEDS`,
+`FEATURE_COUNTS`, `SAMPLE_SIZES`, `JOINT_PROBABILITIES`, `TASKS`, `WIDTHS`,
+`COVARIANCES`, `SEPARATIONS`, `NOISE_LEVELS`, `PRIORS`, `EPOCHS`, and `N_TEST`
+as needed for a pilot or a larger run.
+The hypothesis-to-metric mapping and interpretation rules are in
+`STATIC_GEOMETRY_HYPOTHESES.md`.
+
 ## SLURM on the configured cluster
 
 The repository's `run.sh` dispatches experiments 04–06. From the repository

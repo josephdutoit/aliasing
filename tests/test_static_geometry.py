@@ -42,6 +42,26 @@ def test_finite_support_gad_reconstructs_direct_population_risk():
     assert metrics["risk_identity_error"] < 1e-12
 
 
+def test_finite_support_gad_accepts_precomputed_population_head():
+    hidden = np.array([[1.0, 0.0], [1.0, 1.0], [1.0, -1.0]])
+    target = np.array([0.0, 1.0, -1.0])
+    probabilities = np.array([0.2, 0.4, 0.4])
+    train = np.array([0, 1])
+    weighted_head = np.linalg.lstsq(
+        hidden * np.sqrt(probabilities[:, None]),
+        target * np.sqrt(probabilities),
+        rcond=None,
+    )[0]
+    reference = finite_support_gad(hidden[train], target[train], hidden, target, probabilities)
+    optimized = finite_support_gad(
+        hidden[train], target[train], hidden, target, probabilities,
+        population_head=weighted_head,
+    )
+    assert np.isclose(reference["test_mse"], optimized["test_mse"])
+    assert np.isclose(reference["aliasing"], optimized["aliasing"])
+    assert optimized["decomposition_reconstruction_error"] < 1e-12
+
+
 def test_covariance_and_feature_metrics_are_finite():
     pre = np.array([[1.0, -1.0], [0.5, 2.0], [-2.0, 0.0]])
     covariance = covariance_pair_metrics(pre)

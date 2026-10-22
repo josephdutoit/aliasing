@@ -105,6 +105,8 @@ def finite_support_gad(
     hidden_support: np.ndarray,
     target_support: np.ndarray,
     probabilities: np.ndarray,
+    *,
+    population_head: np.ndarray | None = None,
 ) -> dict[str, float]:
     """Decompose finite-support prediction error for a frozen linear readout.
 
@@ -134,11 +136,14 @@ def finite_support_gad(
     null_projector = np.eye(hidden_train.shape[1]) - projector
 
     sqrt_prob = np.sqrt(probabilities)
-    population_head = np.linalg.lstsq(
-        hidden_support * sqrt_prob[:, None],
-        target_support * sqrt_prob,
-        rcond=None,
-    )[0]
+    if population_head is None:
+        population_head = np.linalg.lstsq(
+            hidden_support * sqrt_prob[:, None],
+            target_support * sqrt_prob,
+            rcond=None,
+        )[0]
+    elif population_head.shape != (hidden_support.shape[1],):
+        raise ValueError("population_head shape does not match hidden representation")
     residual_model = hidden_support @ population_head - target_support
     residual_alias = -(hidden_support @ (null_projector @ population_head))
     residual_data = hidden_support @ (projector @ (fitted_head - population_head))
