@@ -129,9 +129,22 @@ def finite_support_gad(
     if np.any(probabilities < 0) or not np.isclose(probabilities.sum(), 1.0):
         raise ValueError("probabilities must be nonnegative and sum to one")
 
-    pinv_train = np.linalg.pinv(hidden_train)
+    # Obtain both the minimum-norm fit and row-space projector from the same
+    # SVD rank decision. Forming pinv(X) @ X is inaccurate for ill-conditioned
+    # near-collisions: roundoff in the projector can be amplified by a large
+    # population-head coefficient, creating a spurious alias component.
+    u, singular, vh = np.linalg.svd(hidden_train, full_matrices=False)
+    largest = float(singular[0]) if singular.size else 0.0
+    tolerance = max(hidden_train.shape) * np.finfo(float).eps * largest
+    rank = int(np.sum(singular > tolerance))
+    if rank:
+        row_basis = vh[:rank]
+        pinv_train = (row_basis.T / singular[:rank]) @ u[:, :rank].T
+        projector = row_basis.T @ row_basis
+    else:
+        pinv_train = np.zeros((hidden_train.shape[1], hidden_train.shape[0]))
+        projector = np.zeros((hidden_train.shape[1], hidden_train.shape[1]))
     fitted_head = pinv_train @ target_train
-    projector = pinv_train @ hidden_train
     projector = 0.5 * (projector + projector.T)
     null_projector = np.eye(hidden_train.shape[1]) - projector
 

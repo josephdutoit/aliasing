@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from itertools import product
 from pathlib import Path
 
@@ -117,7 +118,6 @@ def main() -> None:
         rows.extend(evaluate_design(a, seed, cov, task))
     # Aggregate over seeds only; rows within a seed share the same inputs and
     # random features and are therefore deliberately treated as paired.
-    keys = ("covariance", "task", "sample_size", "width")
     # Generic helper expects numeric grouping keys, so create stable IDs.
     cov_ids = {v:i for i,v in enumerate(a.covariances.split(","))}
     task_ids = {v:i for i,v in enumerate(a.tasks.split(","))}
@@ -141,20 +141,58 @@ def main() -> None:
         "input_dim": a.input_dim, "covariances": a.covariances, "tasks": a.tasks,
         "num_seeds": a.num_seeds, "n_test": a.n_test, "seed": a.seed,
     }])
-    fig, axes = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
-    for ax, metric, label in zip(axes.flat,
-        ("test_mse", "aliasing", "data_algorithm", "training_condition_nonzero"),
-        ("held-out MSE", "GAD alias component", "GAD data/algorithm component", "nonzero singular condition")):
-        for width in a.widths:
-            sel = [r for r in means if int(float(r["width"])) == width
-                   and r["covariance"] == a.covariances.split(",")[0]
-                   and r["task"] == a.tasks.split(",")[0]]
-            sel.sort(key=lambda r: float(r["sample_size"]))
-            if sel: ax.plot([r["sample_size"] for r in sel],[r[metric] for r in sel],marker=".",label=f"w={width}")
-        ax.set_xlabel("training sample count"); ax.set_ylabel(label); ax.grid(alpha=.25)
-    axes[0,0].legend(fontsize=7,ncol=2)
-    fig.savefig(a.output_dir/"double_descent_decomposition.png",dpi=170,bbox_inches="tight"); plt.close(fig)
-    print(f"Wrote {len(rows)} rows to {a.output_dir}")
+    metric_info = (
+        ("test_mse", "held-out MSE"),
+        ("aliasing", "GAD alias component"),
+        ("data_algorithm", "GAD data/algorithm component"),
+        ("training_condition_nonzero", "nonzero singular condition"),
+    )
+    ci_lookup = {
+        (r["covariance"], r["task"], int(float(r["sample_size"])), int(float(r["width"]))): r
+        for r in cis
+    }
+    for cov in a.covariances.split(","):
+        for task in a.tasks.split(","):
+            fig, axes = plt.subplots(1, 4, figsize=(19, 4.5), constrained_layout=True)
+            for ax, (metric, label) in zip(axes, metric_info):
+                for width in a.widths:
+                    sel = [r for r in means if int(float(r["width"])) == width
+                           and r["covariance"] == cov and r["task"] == task]
+                    sel.sort(key=lambda r: float(r["sample_size"]))
+                    if not sel:
+                        continue
+                    x = np.asarray([float(r["sample_size"]) for r in sel])
+                    y = np.asarray([float(r[metric]) for r in sel])
+                    intervals = [ci_lookup[(cov, task, int(float(r["sample_size"])), width)] for r in sel]
+                    lo = np.asarray([float(r[f"{metric}_ci95_low"]) for r in intervals])
+                    hi = np.asarray([float(r[f"{metric}_ci95_high"]) for r in intervals])
+                    line, = ax.plot(x, y, marker=".", linewidth=1.1, label=f"w={width}")
+                    ax.fill_between(x, lo, hi, color=line.get_color(), alpha=.12, linewidth=0)
+                ax.set_xlabel("training sample count")
+                ax.set_ylabel(label)
+                ax.grid(alpha=.25)
+                # Interpolation-region spikes can be orders of magnitude larger
+                # than the surrounding curve. Symlog keeps them visible without
+                # making the finite, non-spike regime unreadable.
+                ax.set_yscale("symlog", linthresh=1e-8)
+            axes[0].legend(fontsize=7, ncol=2)
+            fig.suptitle(f"Frozen random features: covariance={cov}, task={task}; shaded bands are pointwise seed-bootstrap 95% CIs")
+            suffix = f"{cov}_{task}".replace("/", "_")
+            fig.savefig(a.output_dir/f"double_descent_{suffix}.png", dpi=170, bbox_inches="tight")
+            if cov == a.covariances.split(",")[0] and task == a.tasks.split(",")[0]:
+                fig.savefig(a.output_dir/"double_descent_decomposition.png", dpi=170, bbox_inches="tight")
+            plt.close(fig)
+    max_reconstruction_error = max(float(r["decomposition_reconstruction_error"]) for r in rows)
+    max_identity_error = max(float(r["risk_identity_error"]) for r in rows)
+    with (a.output_dir/"run_manifest.json").open("w") as f:
+        json.dump({"experiment": "09_double_descent_decomposition",
+                   "args": vars(a) | {"output_dir": str(a.output_dir)}, "rows": len(rows),
+                   "max_decomposition_reconstruction_error": max_reconstruction_error,
+                   "max_risk_identity_error": max_identity_error,
+                   "plot_configs": [f"{c}_{t}" for c in a.covariances.split(",") for t in a.tasks.split(",")]},
+                  f, indent=2, default=str)
+    print(f"Wrote {len(rows)} rows and {len(a.covariances.split(','))*len(a.tasks.split(','))} configuration plots to {a.output_dir}; "
+          f"max risk identity error={max_identity_error:.3g}")
 
 
 if __name__ == "__main__": main()

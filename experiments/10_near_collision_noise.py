@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from itertools import product
 from pathlib import Path
 
@@ -76,6 +77,7 @@ def run_one(args: argparse.Namespace, seed: int, delta: float, noise: float,
         "prior_positive": float(prior), "target_gap": float(args.target_gap),
         "sample_size": float(n), "separation_to_noise": float(delta/noise) if noise else float("inf"),
         "exact_bayes_risk": bayes_risk(delta, noise, prior, args.target_gap, args.quadrature_order),
+        "finite_sample_excess_over_bayes": float(gad["test_mse"] - bayes_risk(delta, noise, prior, args.target_gap, args.quadrature_order)),
         **gad,
     }
 
@@ -119,21 +121,55 @@ def main() -> None:
         "target_gap":a.target_gap,"num_seeds":a.num_seeds,"n_test":a.n_test,
         "quadrature_order":a.quadrature_order,"seed":a.seed,
     }])
-    fig,axes=plt.subplots(1,3,figsize=(15,4.5),constrained_layout=True)
+    max_reconstruction_error=max(float(r["decomposition_reconstruction_error"]) for r in rows)
+    max_identity_error=max(float(r["risk_identity_error"]) for r in rows)
+    with (a.output_dir/"run_manifest.json").open("w") as f:
+        json.dump({"experiment":"10_near_collision_noise","args":vars(a)|{"output_dir":str(a.output_dir)},
+                   "rows":len(rows),"max_decomposition_reconstruction_error":max_reconstruction_error,
+                   "max_risk_identity_error":max_identity_error,
+                   "interpretation":"exact_bayes_risk is Bayes uncertainty from the noisy observation channel; GAD aliasing is a distinct training-null-space component"},
+                  f,indent=2,default=str)
+    fig,axes=plt.subplots(2,2,figsize=(13,9),constrained_layout=True)
     chosen_prior=min(a.priors,key=lambda x:abs(x-0.5))
+    ci_lookup={(float(r["separation"]),float(r["observation_noise"]),float(r["prior_positive"]),float(r["sample_size"])):r for r in cis}
+    panels=((axes[0,0],"exact_bayes_risk","Bayes risk from noisy observation"),
+            (axes[0,1],"model_insufficiency","population affine-readout insufficiency"),
+            (axes[1,0],"test_mse","finite-sample affine-readout risk"),
+            (axes[1,1],"aliasing","GAD training-null-space alias component"))
     for noise in a.noise_levels:
         sel=[r for r in means if float(r["observation_noise"])==noise and float(r["prior_positive"])==chosen_prior
              and int(float(r["sample_size"]))==max(a.sample_sizes)]
         sel.sort(key=lambda r:float(r["separation"]))
         label=f"noise={noise:g}"
-        axes[0].plot([r["separation"] for r in sel],[r["exact_bayes_risk"] for r in sel],marker="o",label=label)
-        axes[1].plot([r["separation"] for r in sel],[r["test_mse"] for r in sel],marker="o",label=label)
-        axes[2].plot([r["separation"] for r in sel],[r["aliasing"] for r in sel],marker="o",label=label)
-    for ax,label in zip(axes,("exact Bayes risk","finite-sample linear readout risk","GAD alias component")):
-        ax.set_xlabel("hidden-state separation");ax.set_ylabel(label);ax.grid(alpha=.25)
-    axes[0].legend(fontsize=8)
+        for ax,key,ylabel in panels:
+            x=np.asarray([float(r["separation"]) for r in sel])
+            y=np.asarray([float(r[key]) for r in sel])
+            ax.plot(x,y,marker="o",label=label)
+            if key!="exact_bayes_risk":
+                bounds=[ci_lookup[(float(r["separation"]),noise,chosen_prior,float(max(a.sample_sizes)))] for r in sel]
+                ax.fill_between(x,[float(r[f"{key}_ci95_low"]) for r in bounds],
+                                [float(r[f"{key}_ci95_high"]) for r in bounds],alpha=.13)
+            ax.set_xlabel("hidden-state separation");ax.set_ylabel(ylabel);ax.grid(alpha=.25)
+    axes[0,0].legend(fontsize=8)
+    fig.suptitle(f"Noisy two-state channel at prior={chosen_prior:g}, n={max(a.sample_sizes)}; bands are pointwise 95% seed-bootstrap CIs")
     fig.savefig(a.output_dir/"near_collision_noise.png",dpi=170,bbox_inches="tight");plt.close(fig)
-    print(f"Wrote {len(rows)} rows to {a.output_dir}")
+    fig,axes=plt.subplots(1,3,figsize=(15,4.5),constrained_layout=True)
+    for noise in a.noise_levels:
+        sel=[r for r in means if float(r["observation_noise"])==noise and float(r["prior_positive"])==chosen_prior
+             and float(r["separation"])==max(a.separations)]
+        sel.sort(key=lambda r:float(r["sample_size"]))
+        x=np.asarray([float(r["sample_size"]) for r in sel]);label=f"noise={noise:g}"
+        for ax,key,label_y in zip(axes,("test_mse","aliasing","data_algorithm"),
+                                  ("finite-sample affine-readout risk","GAD alias component","GAD data/algorithm component")):
+            y=np.asarray([float(r[key]) for r in sel]);ax.plot(x,y,marker="o",label=label)
+            bounds=[ci_lookup[(max(a.separations),noise,chosen_prior,float(r["sample_size"]))] for r in sel]
+            ax.fill_between(x,[float(r[f"{key}_ci95_low"]) for r in bounds],
+                            [float(r[f"{key}_ci95_high"]) for r in bounds],alpha=.13)
+            ax.set_xlabel("readout training sample count");ax.set_ylabel(label_y);ax.grid(alpha=.25)
+    axes[0].legend(fontsize=8)
+    fig.suptitle(f"Sample-size convergence at separation={max(a.separations):g}, prior={chosen_prior:g}; pointwise 95% seed-bootstrap CIs")
+    fig.savefig(a.output_dir/"near_collision_sample_convergence.png",dpi=170,bbox_inches="tight");plt.close(fig)
+    print(f"Wrote {len(rows)} rows to {a.output_dir}; max risk identity error={max_identity_error:.3g}")
 
 
 if __name__=="__main__":main()

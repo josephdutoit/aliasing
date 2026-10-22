@@ -62,6 +62,21 @@ def test_finite_support_gad_accepts_precomputed_population_head():
     assert optimized["decomposition_reconstruction_error"] < 1e-12
 
 
+def test_near_collision_svd_projector_does_not_create_spurious_aliasing():
+    separation = 1e-8
+    hidden = np.array([[1.0, 0.0], [1.0, separation], [0.0, 0.0]])
+    target = np.array([0.5, -0.5, 0.0])
+    probabilities = np.array([0.25, 0.25, 0.5])
+    population_head = np.array([0.5, -1.0 / separation])
+    metrics = finite_support_gad(
+        hidden, target, hidden, target, probabilities,
+        population_head=population_head,
+    )
+    assert metrics["aliasing"] < 1e-20
+    assert metrics["decomposition_reconstruction_error"] < 1e-8
+    assert metrics["risk_identity_error"] < 1e-8
+
+
 def test_covariance_and_feature_metrics_are_finite():
     pre = np.array([[1.0, -1.0], [0.5, 2.0], [-2.0, 0.0]])
     covariance = covariance_pair_metrics(pre)

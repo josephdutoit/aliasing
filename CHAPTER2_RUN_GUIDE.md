@@ -118,7 +118,33 @@ Bayes risk must equal `collision_mass * conditional_positive_mass * (1 -
 conditional_positive_mass) * target_gap**2`. The common-target task should have
 zero Bayes risk even though the represented states collide. It is the fastest
 check that the collision diagnostic measures target aliasing rather than
-geometric overlap alone.
+geometric overlap alone. The script supplies the analytic population-optimal
+head to GAD and stops if the balanced exact-collision control has a nonzero
+GAD alias term. It writes a `run_manifest.json` with formula and decomposition
+checks.
+
+Experiments 09 and 10 now plot pointwise seed-bootstrap confidence bands.
+Experiment 09 writes a separate double-descent figure for every covariance and
+task pair. Experiment 10 separates Bayes uncertainty from the noisy observation
+channel, population affine-model insufficiency, finite-sample readout risk, and
+the GAD alias component; it also plots readout sample-size convergence.
+
+## Results to preserve and upload
+
+Each script writes `raw.csv`, `mean.csv`, `std.csv`, `ci95.csv`, `config.csv`,
+and `run_manifest.json` alongside its PNG figures. Preserve and commit the
+entire experiment output directory, not only the PNGs. The raw rows and
+manifest are needed to check seed variation, run settings, and the decomposition
+identities. For experiments 09–11, inspect `max_risk_identity_error` in the
+manifest; for experiment 11 also check `max_formula_error` and the per-row
+`balanced_exact_alias_control` field.
+
+Experiment 11 treats only `separation == 0` as an exact collision. Small
+positive separations remain distinct support points, even when they fall below
+`--collision-tolerance`; the tolerance is recorded as a practical scale only.
+The shared GAD routine now obtains the training row-space projector and
+minimum-norm fit from one SVD rank decision, avoiding roundoff amplification
+when the near-collision readout coefficients are large.
 
 For a focused smoke run, set the relevant environment variables before
 submission. For example:
@@ -175,4 +201,3 @@ experiment 06. You can override `NUM_SEEDS`, `SAMPLE_SIZES`, `FEATURE_COUNTS`,
   not latent feature counts and are not direct superposition measurements.
 - Compare mean and confidence-interval files across independent seeds; retain
   raw results and configuration files for provenance.
-
