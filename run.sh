@@ -40,6 +40,37 @@ if [[ "$(basename "$SCRIPT")" == "04_superposition_aliasing.py" ]]; then
     exit 0
 fi
 
+if [[ "$(basename "$SCRIPT")" == "05_static_dictionary_geometry.py" ]]; then
+    OUT_DIR="$OUTPUT_ROOT/static_dictionary_geometry"
+    mkdir -p "$OUT_DIR"
+    cd "$REPO_DIR"
+    export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 MPLBACKEND=Agg
+    source "${REPO_DIR}/.venv/bin/activate"
+    "$PYTHON" "$SCRIPT" \
+        --dimension "${DIMENSION:-4}" \
+        --feature-counts "${FEATURE_COUNTS:-4,5,8}" \
+        --max-sparsities "${MAX_SPARSITIES:-1,2}" \
+        --sample-sizes "${SAMPLE_SIZES:-8,16,32}" \
+        --num-seeds "${NUM_SEEDS:-20}" \
+        --output-dir "$OUT_DIR"
+    exit 0
+fi
+
+if [[ "$(basename "$SCRIPT")" == "06_trained_sparse_feature_geometry.py" ]]; then
+    OUT_DIR="$OUTPUT_ROOT/trained_sparse_feature_geometry"
+    mkdir -p "$OUT_DIR"
+    cd "$REPO_DIR"
+    export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 MPLBACKEND=Agg
+    source "${REPO_DIR}/.venv/bin/activate"
+    "$PYTHON" "$SCRIPT" \
+        --feature-counts "${FEATURE_COUNTS:-8,12}" \
+        --bottlenecks "${BOTTLENECKS:-3,4}" \
+        --sample-sizes "${SAMPLE_SIZES:-32,64,128}" \
+        --num-seeds "${NUM_SEEDS:-10}" \
+        --epochs "${EPOCHS:-800}" \
+        --output-dir "$OUT_DIR"
+    exit 0
+fi
 mkdir -p "$OUTPUT_ROOT/samplewise"
 mkdir -p "$OUTPUT_ROOT/featurewise"
 
