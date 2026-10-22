@@ -1,0 +1,12 @@
+{
+  "marginals": "0.12,0.16,0.18,0.2,0.21,0.24,0.3",
+  "max_n": 64,
+  "output_dir": "outputs/superposition_sample_boundary",
+  "calculation": "exact finite occupancy sums, floating-point evaluation",
+  "target": "s1+s2; independent Bernoulli(p) semantic features",
+  "fitting_rule": "minimum Euclidean-norm least squares in the same coordinates as study 06",
+  "one_sample_boundary": 0.16061006232854513,
+  "population_boundary": 0.21132486540518708,
+  "interpretation": "Original A,D apply at n=1. Larger-n sampling/unobserved terms are LS extensions; feasibility is reported.",
+  "claim": "A preference reversal exists for every p strictly between the two boundaries; no unique crossing is asserted."
+}
