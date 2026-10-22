@@ -137,6 +137,10 @@ run.
 The hypothesis-to-metric mapping and interpretation rules are in
 `STATIC_GEOMETRY_HYPOTHESES.md`.
 
+The current `run.sh` SLURM header requests a one-hour limit. The full 08 and 09
+sweeps may need more wall time; pass your cluster's allowed limit with
+`sbatch --time=...` or update the header before submitting those full runs.
+
 ## SLURM on the configured cluster
 
 The repository's `run.sh` dispatches experiments 04–06. From the repository
@@ -171,3 +175,4 @@ experiment 06. You can override `NUM_SEEDS`, `SAMPLE_SIZES`, `FEATURE_COUNTS`,
   not latent feature counts and are not direct superposition measurements.
 - Compare mean and confidence-interval files across independent seeds; retain
   raw results and configuration files for provenance.
+
