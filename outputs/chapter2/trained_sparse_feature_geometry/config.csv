@@ -1,0 +1,2 @@
+feature_counts,bottlenecks,sample_sizes,num_seeds,n_test,epochs,active_probability,learning_rate,weight_decay,collision_tolerance,seed
+6,2,"16,32",2,2048,150,0.2,0.01,1e-05,1e-09,20261022
