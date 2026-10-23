@@ -128,6 +128,13 @@ Experiment 09 writes a separate double-descent figure for every covariance and
 task pair. Experiment 10 separates Bayes uncertainty from the noisy observation
 channel, population affine-model insufficiency, finite-sample readout risk, and
 the GAD alias component; it also plots readout sample-size convergence.
+Regenerate only that sample-size figure from existing summaries, without
+rerunning experiment 10, with:
+
+```bash
+MPLBACKEND=Agg python experiments/plot_near_collision_summary.py \
+  outputs/chapter2/near_collision_noise
+```
 
 ## Results to preserve and upload
 
