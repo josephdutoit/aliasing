@@ -1,0 +1,43 @@
+/home/jcdutoit/generalized_gad/glm_gad_samplewise.py:319: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(M_vals, E_mi_list, label='Model Insufficiency ($\mathcal{E}_{mi}$)', color='green', linewidth=1.5)
+/home/jcdutoit/generalized_gad/glm_gad_samplewise.py:320: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(M_vals, E_ga_list, label='Generalized Aliasing ($\mathcal{E}_{ga}$)', color='red', linewidth=2)
+/home/jcdutoit/generalized_gad/glm_gad_samplewise.py:321: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(M_vals, E_di_list, label='Data Insufficiency ($\mathcal{E}_{di}$)', color='blue', linewidth=2)
+--- Running Bregman-GAD for: LOGISTIC (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:11<19:36, 11.89s/it]Seeds:   3%|▎         | 3/100 [00:12<05:17,  3.28s/it]Seeds:   4%|▍         | 4/100 [00:12<03:39,  2.29s/it]Seeds:   5%|▌         | 5/100 [00:13<02:52,  1.82s/it]Seeds:  50%|█████     | 50/100 [00:13<00:04, 11.64it/s]Seeds:  59%|█████▉    | 59/100 [00:14<00:03, 11.45it/s]Seeds:  75%|███████▌  | 75/100 [00:14<00:01, 16.13it/s]Seeds:  86%|████████▌ | 86/100 [00:15<00:00, 19.84it/s]Seeds:  93%|█████████▎| 93/100 [00:15<00:00, 19.34it/s]Seeds:  98%|█████████▊| 98/100 [00:15<00:00, 20.15it/s]Seeds: 100%|██████████| 100/100 [00:16<00:00,  6.10it/s]
+--- Running Bregman-GAD for: GAUSSIAN (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:15<25:24, 15.40s/it]Seeds:  58%|█████▊    | 58/100 [00:15<00:07,  5.26it/s]Seeds:  87%|████████▋ | 87/100 [00:17<00:01,  7.03it/s]Seeds: 100%|██████████| 100/100 [00:18<00:00,  8.07it/s]Seeds: 100%|██████████| 100/100 [00:18<00:00,  5.40it/s]
+--- Running Bregman-GAD for: POISSON (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:33<56:02, 33.96s/it]Seeds:   2%|▏         | 2/100 [00:35<24:17, 14.88s/it]Seeds:   3%|▎         | 3/100 [00:39<15:42,  9.71s/it]Seeds:   7%|▋         | 7/100 [00:39<08:38,  5.58s/it]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/jcdutoit/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/home/jcdutoit/generalized_gad/glm_gad_samplewise.py", line 219, in _run_seed_wrapper
+    return run_single_experiment(distribution, seed)
+  File "/home/jcdutoit/generalized_gad/glm_gad_samplewise.py", line 146, in run_single_experiment
+    M_TM_plus = torch.linalg.pinv(M_TM_whitened) * D_sqrt[None, :]
+                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+torch._C._LinAlgError: linalg.svd: The algorithm failed to converge because the input matrix contained non-finite values.
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/jcdutoit/generalized_gad/glm_gad_samplewise.py", line 405, in <module>
+    run_experiment('poisson', num_seeds=args.num_seeds, num_workers=args.num_workers)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jcdutoit/generalized_gad/glm_gad_samplewise.py", line 236, in run_experiment
+    results = list(tqdm(pool.imap(_run_seed_wrapper, seed_args), total=num_seeds, desc="Seeds"))
+  File "/home/jcdutoit/generalized_gad/.venv/lib/python3.13/site-packages/tqdm/std.py", line 1186, in __iter__
+    for obj in iterable:
+               ^^^^^^^^
+  File "/home/jcdutoit/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/multiprocessing/pool.py", line 873, in next
+    raise value
+torch._C._LinAlgError: linalg.svd: The algorithm failed to converge because the input matrix contained non-finite values.

@@ -1,0 +1,43 @@
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:321: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_mi_list, label='Model Insufficiency ($\mathcal{E}_{mi}$)', color='green', linewidth=1.5)
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:322: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_ga_list, label='Generalized Aliasing ($\mathcal{E}_{ga}$)', color='red', linewidth=2)
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:323: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_di_list, label='Data Insufficiency ($\mathcal{E}_{di}$)', color='blue', linewidth=2)
+--- Running Parameter-Wise GAD for: LOGISTIC (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:10<17:35, 10.66s/it]Seeds:   2%|▏         | 2/100 [00:13<09:26,  5.78s/it]Seeds:   3%|▎         | 3/100 [00:13<05:21,  3.31s/it]Seeds:  57%|█████▋    | 57/100 [00:13<00:04, 10.46it/s]Seeds:  72%|███████▏  | 72/100 [00:13<00:02, 13.93it/s]Seeds:  83%|████████▎ | 83/100 [00:14<00:01, 15.69it/s]Seeds:  91%|█████████ | 91/100 [00:14<00:00, 17.48it/s]Seeds:  98%|█████████▊| 98/100 [00:14<00:00, 18.03it/s]Seeds: 100%|██████████| 100/100 [00:14<00:00,  6.78it/s]
+--- Running Parameter-Wise GAD for: GAUSSIAN (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:09<15:29,  9.39s/it]Seeds:   2%|▏         | 2/100 [00:10<07:16,  4.45s/it]Seeds:   3%|▎         | 3/100 [00:11<05:02,  3.12s/it]Seeds:   6%|▌         | 6/100 [00:13<02:04,  1.32s/it]Seeds:   7%|▋         | 7/100 [00:13<01:37,  1.05s/it]Seeds:  20%|██        | 20/100 [00:13<00:16,  4.84it/s]Seeds:  39%|███▉      | 39/100 [00:14<00:05, 10.36it/s]Seeds:  50%|█████     | 50/100 [00:14<00:03, 14.53it/s]Seeds:  54%|█████▍    | 54/100 [00:14<00:03, 12.72it/s]Seeds:  57%|█████▋    | 57/100 [00:14<00:03, 13.45it/s]Seeds:  65%|██████▌   | 65/100 [00:15<00:01, 18.07it/s]Seeds:  69%|██████▉   | 69/100 [00:15<00:01, 17.27it/s]Seeds:  72%|███████▏  | 72/100 [00:15<00:01, 17.35it/s]Seeds:  75%|███████▌  | 75/100 [00:15<00:01, 16.03it/s]Seeds:  78%|███████▊  | 78/100 [00:16<00:02,  8.60it/s]Seeds:  92%|█████████▏| 92/100 [00:16<00:00, 18.62it/s]Seeds:  97%|█████████▋| 97/100 [00:17<00:00, 18.38it/s]Seeds: 100%|██████████| 100/100 [00:17<00:00,  5.79it/s]
+--- Running Parameter-Wise GAD for: POISSON (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   0%|          | 0/100 [00:26<?, ?it/s]
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/jcdutoit/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ~~~~^^^^^^^^^^^^^^^
+  File "/home/jcdutoit/generalized_gad/glm_gad_featurewise.py", line 221, in _run_seed_wrapper_N
+    return run_single_experiment_sweeping_N(distribution, seed)
+  File "/home/jcdutoit/generalized_gad/glm_gad_featurewise.py", line 152, in run_single_experiment_sweeping_N
+    M_TM_plus = torch.linalg.pinv(M_TM_whitened) * D_sqrt[None, :]
+                ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+torch._C._LinAlgError: linalg.svd: The algorithm failed to converge because the input matrix contained non-finite values.
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/jcdutoit/generalized_gad/glm_gad_featurewise.py", line 395, in <module>
+    run_experiment_sweeping_N('poisson', num_seeds=args.num_seeds, num_workers=args.num_workers)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jcdutoit/generalized_gad/glm_gad_featurewise.py", line 238, in run_experiment_sweeping_N
+    results = list(tqdm(pool.imap(_run_seed_wrapper_N, seed_args), total=num_seeds, desc="Seeds"))
+  File "/home/jcdutoit/generalized_gad/.venv/lib/python3.13/site-packages/tqdm/std.py", line 1186, in __iter__
+    for obj in iterable:
+               ^^^^^^^^
+  File "/home/jcdutoit/.local/share/uv/python/cpython-3.13.7-linux-x86_64-gnu/lib/python3.13/multiprocessing/pool.py", line 873, in next
+    raise value
+torch._C._LinAlgError: linalg.svd: The algorithm failed to converge because the input matrix contained non-finite values.

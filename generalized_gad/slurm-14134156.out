@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/jcdutoit/generalized_gad/superposition.py", line 4, in <module>
+    from scipy.linalg import pinv
+ModuleNotFoundError: No module named 'scipy'

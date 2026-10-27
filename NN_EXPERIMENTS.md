@@ -32,10 +32,15 @@ python experiments/02_random_feature_aliasing.py \
   --output-dir outputs/random_feature_samplewise
 ```
 
-Each run writes raw per-seed results, means, standard deviations, and a plot.
+Each run writes raw per-seed results, means, sample standard deviations,
+pointwise bootstrap confidence intervals, and a plot. Featurewise runs also
+write paired per-seed contrasts between adjacent widths. These intervals
+describe variation across generated problems/seeds; they are not simultaneous
+bands and do not correct for selecting a minimum from the sweep.
 The random-feature matrix is generated once per seed for featurewise sweeps,
 and fresh training samples are generated for each sample size in samplewise
-sweeps.
+sweeps. Thus samplewise intervals compare independently regenerated problems
+at each sample size rather than paired growth trajectories.
 
 ## 2. Feature-learning MLP
 
@@ -65,6 +70,75 @@ python experiments/03_feature_learning_mlp.py \
 Use `--checkpoints` to control checkpoint locations, for example
 `0,10,100,500,1000,2500,5000`.
 
+The currently committed `results/feature_learning_03/featurewise` and
+`results/feature_learning_03/samplewise` files have identical content hashes.
+Treat them as one result set until run provenance establishes that they
+represent independent runs.
+
+## 3. Controlled superposition and representation aliasing
+
+`experiments/04_superposition_aliasing.py` evaluates the exact finite-support
+construction in `MATHEMATICAL_RESULTS.md`. Its dictionary contains one more
+unit feature direction than dimensions. A spread parameter controls the
+participation ratio and mutual coherence of one feature; a sparsity parameter
+controls whether the data support contains a distinct code with the same
+hidden representation. The reported `representation_bayes_mse` is the exact
+minimum squared risk from observing only the represented state.
+
+```bash
+python experiments/04_superposition_aliasing.py \
+  --dimension 8 \
+  --collision-mass 0.5 \
+  --output-dir outputs/superposition_aliasing
+```
+
+This controlled example isolates a static geometric mechanism. It does not
+claim that activation correlation in a trained MLP measures superposition;
+the MLP's null-head response remains a separate, readout-specific diagnostic.
+
+## 4. Static dictionary geometry and finite-sample aliasing
+
+`experiments/05_static_dictionary_geometry.py` compares orthogonal, random,
+and structured dictionaries over code sparsity and training sample size. It
+reports feature-direction coherence, the support-enumerated minimum singular
+value, representation Bayes risk, and a finite-support GAD decomposition.
+
+Pilot:
+
+```bash
+python experiments/05_static_dictionary_geometry.py \
+  --dimension 4 \
+  --feature-counts 4,5,8 \
+  --max-sparsities 1,2 \
+  --sample-sizes 8,16 \
+  --num-seeds 3 \
+  --output-dir outputs/chapter2/05_pilot
+```
+
+## 5. Trained sparse-feature geometry
+
+`experiments/06_trained_sparse_feature_geometry.py` trains a sparse-feature
+autoencoder with known latent features. At its final checkpoint it measures
+feature-intervention directions, reconstruction, codebook collisions,
+frozen linear-probe risk and its GAD decomposition, and pre/post-ReLU sample
+Gram summaries.
+
+Pilot:
+
+```bash
+python experiments/06_trained_sparse_feature_geometry.py \
+  --feature-counts 6 \
+  --bottlenecks 2 \
+  --sample-sizes 16,32 \
+  --num-seeds 2 \
+  --n-test 512 \
+  --epochs 150 \
+  --output-dir outputs/chapter2/06_pilot
+```
+
+See [CHAPTER2_RUN_GUIDE.md](CHAPTER2_RUN_GUIDE.md) for installs, default
+sweeps, cluster commands, output definitions, and interpretation notes.
+
 ## HPC guidance
 
 Use one process per independent seed/width task and keep each worker's BLAS
@@ -82,3 +156,4 @@ worker count together with a large `--torch-threads` value.
 
 For a cluster scheduler, it is also reasonable to split the seed range across
 job-array tasks and give each task a separate output directory.
+

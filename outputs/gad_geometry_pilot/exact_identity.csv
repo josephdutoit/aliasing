@@ -1,0 +1,12 @@
+metric,value
+train_rank,18.0
+nullity,22.0
+train_prediction_change,2.0824081883200278e-15
+top_direction_test_risk,1.2032231163878755
+top_direction_expected_risk,1.1887373686680784
+top_direction_predicted_risk,1.1887373686680784
+top_direction_abs_error,0.0
+top_direction_spectral_prediction,1.1887373686680769
+random_direction_mean_risk,0.7647631949734414
+random_direction_mean_prediction,0.765389072443169
+random_direction_mean_abs_error,0.0006258774697276426
