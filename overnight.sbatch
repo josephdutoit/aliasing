@@ -35,4 +35,7 @@ export PYTHONUNBUFFERED=1
 "$PYTHON" -u experiments/overnight_suite.py \
   --output-root "${GAD_OUTPUT_ROOT:-outputs/overnight}" \
   --max-hours "${GAD_MAX_HOURS:-11.5}" \
-  --step-minutes "${GAD_STEP_MINUTES:-25}"
+  --step-minutes "${GAD_STEP_MINUTES:-25}" &
+SUITE_PID=$!
+trap 'kill -TERM "$SUITE_PID" 2>/dev/null || true; wait "$SUITE_PID" || true' TERM INT
+wait "$SUITE_PID"

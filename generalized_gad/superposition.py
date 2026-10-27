@@ -94,14 +94,14 @@ def evaluate_aliasing_geometry(d, n=40, N=100, sparsity=0.05, seed=None):
 
 def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=max(1, min(15, int(os.getenv("GAD_TRIALS", "15"))))):
     """
-    Executes the capacity sweep in parallel using exactly 28 workers.
+    Executes the capacity sweep with up to 28 workers; GAD_MAX_WORKERS can lower the limit.
     """
     results_agg = {d: {'lin_learn': [], 'relu_rand': [], 'relu_learn': []} for d in d_values}
     tasks = [(d, n, N, 0.05, d * 1000 + trial) for d in d_values for trial in range(trials_per_d)]
             
-    print(f"Running {len(tasks)} parallel experiments across 28 workers...")
+    print(f"Running {len(tasks)} parallel experiments with up to {max(1, min(28, int(os.getenv('GAD_MAX_WORKERS', '28'))))} workers...")
     
-    # Explicitly enforce 28 workers
+    # Cap by the cluster allocation when GAD_MAX_WORKERS is provided.
     with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(evaluate_aliasing_geometry, *task) for task in tasks]
         

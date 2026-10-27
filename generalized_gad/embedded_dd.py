@@ -95,7 +95,7 @@ def run_complexity_sweep(d_values, N=100, D_in=500, trials_per_d=max(1, min(15, 
     results = {d: {'rand': [], 'learned': []} for d in d_values}
     tasks = [(d, N, D_in, 0.05, d * 1000 + trial) for d in d_values for trial in range(trials_per_d)]
             
-    print(f"Running {len(tasks)} parallel experiments using 28 workers...")
+    print(f"Running {len(tasks)} parallel experiments with up to {max(1, min(28, int(os.getenv('GAD_MAX_WORKERS', '28'))))} workers...")
     
     with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(experiment_feature_complexity, *task) for task in tasks]

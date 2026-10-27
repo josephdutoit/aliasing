@@ -79,7 +79,7 @@ def run_2d_sweep(N_values, d_values, n_samples=100, D_in=500, trials=max(1, min(
     tasks = [(N_cap, d, n_samples, D_in, 0.05, hash((N_cap, d, t)) % (2**32)) 
              for N_cap, d in itertools.product(N_values, d_values) for t in range(trials)]
     
-    print(f"Running {len(tasks)} grid computations across 100 workers...")
+    print(f"Running {len(tasks)} grid computations with up to {max(1, min(100, int(os.getenv('GAD_MAX_WORKERS', '100'))))} workers...")
     
     results = {}
     with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(100, int(os.getenv("GAD_MAX_WORKERS", "100"))))) as executor:
