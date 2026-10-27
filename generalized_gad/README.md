@@ -11,7 +11,7 @@ this guide. See [RESULTS_INDEX.md](RESULTS_INDEX.md) for a figure gallery.
 | --- | --- | --- | --- |
 | GLM GAD | `glm_gad_samplewise.py`, `glm_gad_featurewise.py` | Sample count or modeled feature count; dual-space error decomposition and information matrix norms | `{gaussian,logistic,poisson,exponential}_{samplewise,featurewise}.png` |
 | Frozen sparse features | `frozen_superposition.py` | Bottleneck size; `||H⁺||₂` for linear and ReLU random features | `superposition_aliasing_mitigation.png` |
-| Globally trained sparse features | `superposition.py`, `superposition_gaussian.py`, `superposition_no_bias.py` | Bottleneck size; compare trained and random features, with variants for noise and bias | `superposition_aliasing_bias_only.png`, `corrected_superposition_aliasing.png`, `clean_superposition_aliasing.png` (check the script for the exact filename of a run) |
+| Globally trained sparse features | `superposition.py`, `superposition_gaussian.py`, `superposition_no_bias.py` | Bottleneck size; compare trained and random features, with variants for evaluation noise and encoder bias | `superposition_aliasing_bias_only.png`, `corrected_superposition_aliasing.png`, `clean_superposition_aliasing.png` (check the script for the exact filename of a run) |
 | Embedded sparse features | `embedded_dd.py`, `embedded_superposition.py`, `superposition_full.py`, `aliasing_heatmap.py` | Latent dimension and/or hidden width; pseudoinverse norms, weight Gram, or regularization comparisons | `embedded_complexity_double_descent.png`, `superposition_mechanics.png`, `regularization_comparison_aliasing.png`, `aliasing_2d_phase_diagram.png` |
 | Earlier GLM prototypes | `ggad_old/` | Historical alternative formulations | `ggad_old/*.png` |
 
@@ -62,6 +62,10 @@ the missing historical seeds or raw curves.
    distributions. Comparing linear and ReLU variants is a useful mechanistic
    probe. None of these plots alone measures held-out prediction error, actual
    decision-boundary aliasing, or the GAD aliasing term for a specified target.
+   In the uploaded frozen-weight plot, ReLU has a *higher* pseudoinverse norm
+   than the linear bottleneck over most tested widths; the learned-bias plot
+   does not show a consistent ReLU advantage either. Learning and thresholding
+   therefore need a task-based test rather than an inference from these curves.
 3. The steep reduction just beyond `d=100` in
    `embedded_complexity_double_descent.png` could be caused by loss of rank:
    `||H⁺||₂` ignores directions whose singular values are zero or below SciPy's

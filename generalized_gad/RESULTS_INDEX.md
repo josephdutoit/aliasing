@@ -14,7 +14,7 @@ Regenerate this index after new runs with
 | [Capacity by latent feature heatmap](aliasing_2d_phase_diagram.png) | Joint sweep of latent feature count and bottleneck width. |
 | [Frozen random projection](superposition_aliasing_mitigation.png) | Compare linear and ReLU transforms with random weights. |
 | [Learned superposition with bias](superposition_aliasing_bias_only.png) | Compare random and globally trained weights with learned bias. |
-| [Gaussian variant](corrected_superposition_aliasing.png) | Variant with Gaussian background. |
+| [Noisy evaluation variant](corrected_superposition_aliasing.png) | Binary sparse training data, Gaussian noise added to evaluation data. |
 | [No-bias variant](clean_superposition_aliasing.png) | Remove encoder bias. |
 | [Regularization comparison](regularization_comparison_aliasing.png) | Compare autoencoder penalties. |
 
