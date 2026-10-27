@@ -32,10 +32,13 @@ export GAD_GLOBAL_SAMPLES="${GAD_GLOBAL_SAMPLES:-2000}"
 export PYTHONUNBUFFERED=1
 
 "$PYTHON" -c 'import aliasing, matplotlib, numpy, scipy, torch, tqdm'
-"$PYTHON" -u experiments/overnight_suite.py \
-  --output-root "${GAD_OUTPUT_ROOT:-outputs/overnight}" \
-  --max-hours "${GAD_MAX_HOURS:-11.5}" \
-  --step-minutes "${GAD_STEP_MINUTES:-25}" &
+SUITE_ARGS=(--max-hours "${GAD_MAX_HOURS:-11.5}" --step-minutes "${GAD_STEP_MINUTES:-25}")
+if [[ -n "${GAD_RESUME_RUN_DIR:-}" ]]; then
+  SUITE_ARGS+=(--run-dir "$GAD_RESUME_RUN_DIR" --resume)
+else
+  SUITE_ARGS+=(--output-root "${GAD_OUTPUT_ROOT:-outputs/overnight}")
+fi
+"$PYTHON" -u experiments/overnight_suite.py "${SUITE_ARGS[@]}" &
 SUITE_PID=$!
 trap 'kill -TERM "$SUITE_PID" 2>/dev/null || true; wait "$SUITE_PID" || true' TERM INT
 wait "$SUITE_PID"

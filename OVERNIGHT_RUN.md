@@ -56,12 +56,11 @@ inside the step directory. Nothing in `outputs/overnight` is committed by
 default. Large outputs can stay on the cluster until you choose which figures
 or summaries to upload.
 
-Resume unfinished steps after a preemption or timeout, retaining old attempts:
+Resume unfinished steps in another compute job, retaining old attempts:
 
 ```bash
 cd /home/jcdutoit/aliasing
-.venv/bin/python experiments/overnight_suite.py \
-  --run-dir outputs/overnight/<suite-id> --resume --max-hours 11.5
+sbatch --export=ALL,GAD_RESUME_RUN_DIR=outputs/overnight/<suite-id> overnight.sbatch
 ```
 
 The overnight profile is a **survey**, not the published/full sweeps. It runs
