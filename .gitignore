@@ -10,3 +10,5 @@ outputs/overnight/
 gad-overnight-*.log
 outputs/learned_aliasing/
 learned-gad-*.log
+outputs/gad_mechanisms/
+gad-mechanism-*.log
