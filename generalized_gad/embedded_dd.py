@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -41,7 +42,7 @@ def train_tms_autoencoder(X, N_capacity, epochs=2500, lr=0.01):
     
     optimizer = optim.Adam([W, b1, b2], lr=lr)
     
-    for _ in range(epochs):
+    for _ in range(max(1, min(epochs, int(os.getenv("GAD_EPOCHS", str(epochs)))))):
         optimizer.zero_grad()
         
         h = torch.relu(X @ W.T + b1)
@@ -90,13 +91,13 @@ def experiment_feature_complexity(d, N=100, D_in=500, prob_active=0.05, seed=Non
         'pinv_learned': get_pinv_norm(H_learned)
     }
 
-def run_complexity_sweep(d_values, N=100, D_in=500, trials_per_d=15):
+def run_complexity_sweep(d_values, N=100, D_in=500, trials_per_d=max(1, min(15, int(os.getenv("GAD_TRIALS", "15"))))):
     results = {d: {'rand': [], 'learned': []} for d in d_values}
     tasks = [(d, N, D_in, 0.05, d * 1000 + trial) for d in d_values for trial in range(trials_per_d)]
             
     print(f"Running {len(tasks)} parallel experiments using 28 workers...")
     
-    with concurrent.futures.ProcessPoolExecutor(max_workers=28) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(experiment_feature_complexity, *task) for task in tasks]
         
         for future in concurrent.futures.as_completed(futures):
@@ -116,10 +117,10 @@ if __name__ == '__main__':
     D_in_ambient = 500
     
     # Sweep data complexity d across the fixed model capacity N
-    d_sweep = list(range(10, 210, 10))
+    d_sweep = list(range(10, 210, 10))[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
     d_plot, pinv_rand, pinv_learned = run_complexity_sweep(
-        d_sweep, N=N_datapoints, D_in=D_in_ambient, trials_per_d=15
+        d_sweep, N=N_datapoints, D_in=D_in_ambient, trials_per_d=max(1, min(15, int(os.getenv("GAD_TRIALS", "15"))))
     )
     
     plt.figure(figsize=(12, 7))

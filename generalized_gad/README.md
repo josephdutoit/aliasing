@@ -42,9 +42,11 @@ You can pass `--output-root /path/to/scratch` before `--` to use cluster scratch
 `index` writes an updated Markdown gallery that includes historical and new PNGs.
 
 The two GLM scripts support the forwarded `--num-seeds` and `--num-workers`
-arguments. The other scripts currently have expensive fixed sweeps, many of them
-hardcode 28 processes, and `aliasing_heatmap.py` hardcodes **100 processes**.
-Check the SLURM allocation before launching these scripts. The old `run.sh`
+arguments. The older non-GLM scripts default to expensive full sweeps, including
+28 workers (100 for the heatmap). The [overnight suite](../OVERNIGHT_RUN.md)
+can cap workers, epochs, trials, grid density, and global training samples via
+`GAD_MAX_WORKERS`, `GAD_EPOCHS`, `GAD_TRIALS`, `GAD_GRID_STRIDE`, and
+`GAD_GLOBAL_SAMPLES`. Unset these to reproduce the original settings. The old `run.sh`
 assumes a particular current directory and always launches the heatmap; the
 CLI is the recommended entry point for new runs. The original scripts currently
 save figures but not trial-level numerical results; their random-seed behavior

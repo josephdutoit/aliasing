@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import concurrent.futures
 import matplotlib.pyplot as plt
@@ -63,7 +64,7 @@ def experiment_for_capacity(d, n=40, N=100, sparsity=0.1, seed=None):
         'norm_pinv_relu': norm_pinv_relu
     }
 
-def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=20):
+def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=max(1, min(20, int(os.getenv("GAD_TRIALS", "20"))))):
     """
     Executes the capacity sweep in parallel over available CPU cores.
     """
@@ -79,7 +80,7 @@ def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=20):
     print(f"Running {len(tasks)} parallel experiments...")
     
     # Execute in parallel
-    with concurrent.futures.ProcessPoolExecutor(max_workers=28) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(experiment_for_capacity, *task) for task in tasks]
         
         for future in concurrent.futures.as_completed(futures):
@@ -108,11 +109,11 @@ if __name__ == '__main__':
     # Experiment parameters aligned with the featurewise sweep[cite: 10]
     N_features = 100
     n_samples = 40
-    d_sweep = list(range(2, 96, 2))
+    d_sweep = list(range(2, 96, 2))[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
     # Run the parallel sweep
     d_plot, max_int_plot, pinv_lin_plot, pinv_relu_plot = run_parallel_sweep(
-        d_sweep, n=n_samples, N=N_features, trials_per_d=50
+        d_sweep, n=n_samples, N=N_features, trials_per_d=max(1, min(50, int(os.getenv("GAD_TRIALS", "50"))))
     )
     
     # Plotting the results

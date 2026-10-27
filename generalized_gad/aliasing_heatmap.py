@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -31,7 +32,7 @@ def train_tms_autoencoder(X, N_capacity, epochs=2000, lr=0.01, wd=1e-2):
     
     optimizer = optim.AdamW([W, b1, b2], lr=lr, weight_decay=wd)
     
-    for _ in range(epochs):
+    for _ in range(max(1, min(epochs, int(os.getenv("GAD_EPOCHS", str(epochs)))))):
         optimizer.zero_grad()
         h = torch.relu(X @ W.T + b1)
         X_hat = h @ W + b2
@@ -74,14 +75,14 @@ def compute_grid_point(N_cap, d, n_samples=100, D_in=500, prob_active=0.05, seed
         'alias_learned': get_pinv_norm(H_learned)
     }
 
-def run_2d_sweep(N_values, d_values, n_samples=100, D_in=500, trials=5):
+def run_2d_sweep(N_values, d_values, n_samples=100, D_in=500, trials=max(1, min(5, int(os.getenv("GAD_TRIALS", "5"))))):
     tasks = [(N_cap, d, n_samples, D_in, 0.05, hash((N_cap, d, t)) % (2**32)) 
              for N_cap, d in itertools.product(N_values, d_values) for t in range(trials)]
     
     print(f"Running {len(tasks)} grid computations across 100 workers...")
     
     results = {}
-    with concurrent.futures.ProcessPoolExecutor(max_workers=100) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(100, int(os.getenv("GAD_MAX_WORKERS", "100"))))) as executor:
         futures = [executor.submit(compute_grid_point, *task) for task in tasks]
         for future in concurrent.futures.as_completed(futures):
             res = future.result()
@@ -105,10 +106,10 @@ def run_2d_sweep(N_values, d_values, n_samples=100, D_in=500, trials=5):
 if __name__ == '__main__':
     n_samples = 100
     # Create an evenly spaced grid
-    N_sweep = np.arange(20, 220, 20)
-    d_sweep = np.arange(20, 220, 20)
+    N_sweep = np.arange(20, 220, 20)[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
+    d_sweep = np.arange(20, 220, 20)[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
-    Z_rand, Z_learned = run_2d_sweep(N_sweep, d_sweep, n_samples=n_samples, trials=5)
+    Z_rand, Z_learned = run_2d_sweep(N_sweep, d_sweep, n_samples=n_samples, trials=max(1, min(5, int(os.getenv("GAD_TRIALS", "5")))))
     
     # Plotting
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -18,6 +19,7 @@ def learn_global_superposition(d, N=100, sparsity=0.05, global_samples=20000, ep
     """
     # CRITICAL: Prevent PyTorch from multithreading inside the multiprocessing worker
     torch.set_num_threads(1)
+    global_samples = max(1, min(global_samples, int(os.getenv("GAD_GLOBAL_SAMPLES", str(global_samples)))))
     
     # Generate strictly sparse continuous features [0.5, 1.0] (no dense background noise)
     mask = (np.random.rand(global_samples, N) < sparsity).astype(float)
@@ -30,7 +32,7 @@ def learn_global_superposition(d, N=100, sparsity=0.05, global_samples=20000, ep
     
     optimizer = optim.Adam([W, b], lr=0.01)
     
-    for _ in range(epochs):
+    for _ in range(max(1, min(epochs, int(os.getenv("GAD_EPOCHS", str(epochs)))))):
         optimizer.zero_grad()
         
         # Forward pass: bottleneck with learned bias
@@ -90,7 +92,7 @@ def evaluate_aliasing_geometry(d, n=40, N=100, sparsity=0.05, seed=None):
         'pinv_relu_learned': get_pinv_norm(H_relu_learned)
     }
 
-def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=15):
+def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=max(1, min(15, int(os.getenv("GAD_TRIALS", "15"))))):
     """
     Executes the capacity sweep in parallel using exactly 28 workers.
     """
@@ -100,7 +102,7 @@ def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=15):
     print(f"Running {len(tasks)} parallel experiments across 28 workers...")
     
     # Explicitly enforce 28 workers
-    with concurrent.futures.ProcessPoolExecutor(max_workers=28) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(evaluate_aliasing_geometry, *task) for task in tasks]
         
         for future in concurrent.futures.as_completed(futures):
@@ -121,10 +123,10 @@ def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=15):
 if __name__ == '__main__':
     N_features = 100
     n_samples = 40
-    d_sweep = list(range(2, 96, 2))
+    d_sweep = list(range(2, 96, 2))[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
     d_plot, pinv_lin_learn, pinv_relu_rand, pinv_relu_learn = run_parallel_sweep(
-        d_sweep, n=n_samples, N=N_features, trials_per_d=15
+        d_sweep, n=n_samples, N=N_features, trials_per_d=max(1, min(15, int(os.getenv("GAD_TRIALS", "15"))))
     )
     
     # Plotting

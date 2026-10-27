@@ -6,3 +6,5 @@ __pycache__/
 *raw.csv
 *replicates.csv
 slurm_logs/
+outputs/overnight/
+gad-overnight-*.log
