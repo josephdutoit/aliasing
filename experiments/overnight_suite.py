@@ -24,9 +24,11 @@ from zipfile import ZIP_DEFLATED, ZipFile
 
 REPO = Path(__file__).resolve().parent.parent
 KNOWN = {
+    "02": ("02_random_feature_aliasing.py", ["--sweep", "samplewise", "--num-seeds", "6", "--num-workers", "12", "--n-test", "1024"]),
+    "02-featurewise": ("02_random_feature_aliasing.py", ["--sweep", "featurewise", "--num-seeds", "6", "--num-workers", "12", "--n-test", "1024"]),
     "04": ("04_superposition_aliasing.py", []),
     "05": ("05_static_dictionary_geometry.py", ["--num-seeds", "6", "--sample-sizes", "8,16,32"]),
-    "06": ("06_trained_sparse_feature_geometry.py", ["--num-seeds", "4", "--epochs", "250", "--n-test", "512"]),
+    "06": ("06_trained_sparse_feature_geometry.py", ["--feature-counts", "8,10", "--num-seeds", "4", "--epochs", "250", "--n-test", "512"]),
     "07": ("07_static_geometry_factorial.py", ["--feature-counts", "6,8", "--sample-sizes", "8,32,96", "--joint-probabilities", "0,0.1,0.2", "--tasks", "sum,pair_contrast", "--num-seeds", "6"]),
     "08": ("08_trained_superposition_aliasing.py", ["--feature-counts", "8,10", "--bottlenecks", "2,4", "--sample-sizes", "16,64,128", "--joint-probabilities", "0,0.1,0.2", "--tasks", "sum,pair_contrast", "--encoder-samples", "1024", "--num-seeds", "4", "--num-readout-draws", "2", "--epochs", "250"]),
     "09": ("09_double_descent_decomposition.py", ["--widths", "8,16,24,32,40", "--sample-sizes", "16,24,32,40,64", "--covariances", "isotropic,spiked", "--num-seeds", "8", "--n-test", "1024"]),
@@ -104,6 +106,8 @@ def command(repo: Path, python: str, key: str, script: Path, overrides: list[str
     if key.startswith("legacy-"):
         return [python, str(script)], ""
     args = list(overrides or [])
+    if "--num-workers" in args:
+        args[args.index("--num-workers") + 1] = str(workers)
     if key == "13":
         inputs, reason = optional_opt(repo)
         if reason:

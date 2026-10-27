@@ -210,6 +210,7 @@ def main() -> None:
         raise ValueError("num-seeds must be >=2; n-test and epochs must be positive")
     if any(p > 16 for p in args.feature_counts):
         raise ValueError("feature counts above 16 exceed the exact codebook limit")
+    args.output_dir.mkdir(parents=True, exist_ok=True)
     rows: list[dict[str, float]] = []
     for p in args.feature_counts:
         for m in args.bottlenecks:
@@ -218,6 +219,8 @@ def main() -> None:
             for n_train in args.sample_sizes:
                 for seed in range(args.num_seeds):
                     rows.append(fit_one(seed, p, m, n_train, args))
+                    write_csv(args.output_dir / "raw.csv", rows)
+                    print(f"Saved {len(rows)} fits: p={p}, m={m}, n={n_train}, seed={seed}", flush=True)
 
     keys = ("feature_count", "bottleneck", "sample_size")
     means, stds, cis = aggregate_seed_rows(
