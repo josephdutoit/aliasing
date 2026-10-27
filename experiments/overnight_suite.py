@@ -19,6 +19,7 @@ import signal
 import subprocess
 import sys
 import time
+from zipfile import ZIP_DEFLATED, ZipFile
 
 
 REPO = Path(__file__).resolve().parent.parent
@@ -164,6 +165,19 @@ def markdown(state: dict, root: Path) -> None:
     (root / "GALLERY.md").write_text("\n".join(gallery), encoding="utf-8")
 
 
+def compact_bundle(root: Path) -> None:
+    """Share plots and aggregate tables without the large per-trial raw files."""
+    bundle = root / "results_bundle.zip"
+    with ZipFile(bundle, "w", compression=ZIP_DEFLATED, compresslevel=6) as archive:
+        for path in sorted(root.rglob("*")):
+            if path == bundle or not path.is_file():
+                continue
+            if path.suffix.lower() in {".png", ".json", ".md"} or (
+                path.suffix.lower() == ".csv" and path.name not in {"raw.csv", "replicates.csv"}
+            ):
+                archive.write(path, arcname=path.relative_to(root))
+
+
 def terminate(process: subprocess.Popen) -> None:
     try:
         os.killpg(process.pid, signal.SIGTERM)
@@ -304,7 +318,9 @@ def main() -> int:
         if STOP:
             break
     state["updated_utc"] = utc(); dump(manifest, state); markdown(state, root)
+    compact_bundle(root)
     print(f"Final report: {root/'SUMMARY.md'}", flush=True)
+    print(f"Shareable figures and aggregate tables: {root/'results_bundle.zip'}", flush=True)
     failed = {"failed", "timed_out", "interrupted", "completed_no_artifact", "not_run"}
     return 1 if any(v["status"] in failed for v in state["experiments"].values()) else 0
 

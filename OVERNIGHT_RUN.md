@@ -52,9 +52,10 @@ cat outputs/overnight/<suite-id>/SUMMARY.md
 commands, script SHA256s, parameters, elapsed times and artifact paths. Each
 step contains its own `stdout.log`; numbered scripts write their CSVs and plots
 there too. Legacy `generalized_gad` scripts put a nested manifest and plots
-inside the step directory. Nothing in `outputs/overnight` is committed by
-default. Large outputs can stay on the cluster until you choose which figures
-or summaries to upload.
+inside the step directory. The final `results_bundle.zip` collects plots,
+manifests and aggregate CSVs while leaving out large `raw.csv` files and logs;
+you can upload that single file for review tomorrow. Nothing in
+`outputs/overnight` is committed by default.
 
 Resume unfinished steps in another compute job, retaining old attempts:
 
