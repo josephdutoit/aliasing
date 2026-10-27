@@ -1,0 +1,24 @@
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:353: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_mi_list, label='Model Insufficiency ($\mathcal{E}_{mi}$)', color='green', linewidth=1.5)
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:354: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_ga_list, label='Generalized Aliasing ($\mathcal{E}_{ga}$)', color='red', linewidth=2)
+/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:355: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_di_list, label='Data Insufficiency ($\mathcal{E}_{di}$)', color='blue', linewidth=2)
+--- Running Parameter-Wise GAD for: LOGISTIC (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:11<18:16, 11.08s/it]Seeds:   2%|▏         | 2/100 [00:11<08:06,  4.96s/it]Seeds:   7%|▋         | 7/100 [00:12<01:32,  1.00it/s]Seeds:  31%|███       | 31/100 [00:12<00:10,  6.38it/s]Seeds:  42%|████▏     | 42/100 [00:12<00:06,  8.73it/s]Seeds:  50%|█████     | 50/100 [00:13<00:05,  9.89it/s]Seeds:  56%|█████▌    | 56/100 [00:13<00:04, 10.39it/s]Seeds:  72%|███████▏  | 72/100 [00:13<00:01, 18.11it/s]Seeds:  80%|████████  | 80/100 [00:14<00:01, 19.28it/s]Seeds:  86%|████████▌ | 86/100 [00:14<00:00, 21.30it/s]Seeds:  91%|█████████ | 91/100 [00:14<00:00, 21.18it/s]Seeds:  98%|█████████▊| 98/100 [00:14<00:00, 26.11it/s]Seeds: 100%|██████████| 100/100 [00:14<00:00,  6.87it/s]
+--- Running Parameter-Wise GAD for: GAUSSIAN (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:12<21:14, 12.87s/it]Seeds:   8%|▊         | 8/100 [00:14<02:03,  1.34s/it]Seeds:  44%|████▍     | 44/100 [00:14<00:10,  5.42it/s]Seeds:  57%|█████▋    | 57/100 [00:14<00:05,  7.52it/s]Seeds:  63%|██████▎   | 63/100 [00:15<00:04,  8.06it/s]Seeds:  67%|██████▋   | 67/100 [00:15<00:03,  8.33it/s]Seeds:  71%|███████   | 71/100 [00:15<00:03,  9.29it/s]Seeds:  74%|███████▍  | 74/100 [00:16<00:03,  7.45it/s]Seeds:  87%|████████▋ | 87/100 [00:16<00:00, 13.08it/s]Seeds:  92%|█████████▏| 92/100 [00:17<00:00, 13.14it/s]Seeds:  97%|█████████▋| 97/100 [00:17<00:00, 13.71it/s]Seeds: 100%|██████████| 100/100 [00:17<00:00, 14.16it/s]Seeds: 100%|██████████| 100/100 [00:17<00:00,  5.62it/s]
+--- Running Parameter-Wise GAD for: POISSON (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:253: UserWarning: Non-finite fit/weights at N=70, dropping from average
+  return run_single_experiment_sweeping_N(distribution, seed)
+Seeds:   1%|          | 1/100 [00:35<58:17, 35.33s/it]/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:253: UserWarning: Non-finite fit/weights at N=60, dropping from average
+  return run_single_experiment_sweeping_N(distribution, seed)
+Seeds:  12%|█▏        | 12/100 [00:39<03:36,  2.46s/it]Seeds:  31%|███       | 31/100 [00:39<00:51,  1.34it/s]Seeds:  37%|███▋      | 37/100 [00:48<00:58,  1.08it/s]/home/jcdutoit/generalized_gad/glm_gad_featurewise.py:253: UserWarning: Non-finite fit/weights at N=28, dropping from average
+  return run_single_experiment_sweeping_N(distribution, seed)
+Seeds:  41%|████      | 41/100 [00:54<00:59,  1.01s/it]Seeds:  61%|██████    | 61/100 [01:00<00:23,  1.63it/s]Seeds:  67%|██████▋   | 67/100 [01:06<00:22,  1.45it/s]Seeds:  75%|███████▌  | 75/100 [01:11<00:17,  1.45it/s]Seeds:  87%|████████▋ | 87/100 [01:12<00:06,  2.14it/s]Seeds:  98%|█████████▊| 98/100 [01:13<00:00,  3.12it/s]Seeds: 100%|██████████| 100/100 [01:15<00:00,  1.33it/s]
+--- Running Parameter-Wise GAD for: EXPONENTIAL (100 seeds, 28 workers) ---
+  Using 28 workers
+Seeds:   0%|          | 0/100 [00:00<?, ?it/s]Seeds:   1%|          | 1/100 [00:14<23:39, 14.34s/it]Seeds:   4%|▍         | 4/100 [00:14<04:23,  2.75s/it]Seeds:   7%|▋         | 7/100 [00:14<02:03,  1.33s/it]Seeds:  12%|█▏        | 12/100 [00:17<01:14,  1.18it/s]Seeds:  41%|████      | 41/100 [00:17<00:09,  6.19it/s]Seeds:  49%|████▉     | 49/100 [00:18<00:07,  6.55it/s]Seeds:  52%|█████▏    | 52/100 [00:19<00:08,  5.84it/s]Seeds:  61%|██████    | 61/100 [00:19<00:05,  7.50it/s]Seeds:  64%|██████▍   | 64/100 [00:20<00:04,  7.84it/s]Seeds:  66%|██████▌   | 66/100 [00:20<00:05,  6.48it/s]Seeds:  75%|███████▌  | 75/100 [00:21<00:02,  9.21it/s]Seeds:  79%|███████▉  | 79/100 [00:21<00:02,  8.85it/s]Seeds:  84%|████████▍ | 84/100 [00:22<00:01, 10.36it/s]Seeds:  86%|████████▌ | 86/100 [00:23<00:02,  5.73it/s]Seeds:  89%|████████▉ | 89/100 [00:25<00:03,  3.38it/s]Seeds: 100%|██████████| 100/100 [00:25<00:00,  3.90it/s]
