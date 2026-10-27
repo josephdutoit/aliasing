@@ -42,7 +42,7 @@ def main() -> None:
     config = config_rows[0]
     if not mean_rows or not ci_rows:
         raise ValueError("mean.csv and ci95.csv must contain results")
-    required = {"test_mse", "aliasing", "data_algorithm"}
+    required = {"test_mse", "aliasing", "data_insufficiency"}
     if not required.issubset(mean_rows[0]):
         raise ValueError(f"mean.csv is missing columns: {sorted(required - set(mean_rows[0]))}")
 
@@ -57,8 +57,8 @@ def main() -> None:
     }
 
     panels = (("test_mse", "finite-sample affine-readout risk"),
-              ("aliasing", "GAD training-null-space alias component"),
-              ("data_algorithm", "GAD data/algorithm component"))
+              ("aliasing", "GAD residual-leakage alias component"),
+              ("data_insufficiency", "GAD data-insufficiency component"))
     fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), constrained_layout=True)
     for noise in noises:
         selected = [r for r in mean_rows
@@ -78,7 +78,7 @@ def main() -> None:
                                         as_float(r, "sample_size"))] for r in selected]
             low = np.asarray([as_float(r, f"{metric}_ci95_low") for r in interval_rows])
             high = np.asarray([as_float(r, f"{metric}_ci95_high") for r in interval_rows])
-            if metric == "aliasing":
+            if metric == "data_insufficiency":
                 # Full-rank two-coordinate affine features have no training
                 # null space here; values around 1e-32 are floating-point zero.
                 y[np.abs(y) < args.zero_tolerance] = 0.0

@@ -1,3 +1,5 @@
+> **GAD definition correction:** see [GAD_DEFINITIONS_AUDIT.md](GAD_DEFINITIONS_AUDIT.md). Historical `finite_support_gad` outputs reversed aliasing and data insufficiency. Old figures require relabeling before GAD interpretation.
+
 # Chapter 2: additional static-representation experiments
 
 These scripts extend experiments 05–11 on `chapter2-static-geometry-plan-20261021`.
@@ -35,7 +37,7 @@ identities disagree beyond tolerance.
 Outputs: `raw.csv` (individual seed/draw), `mean.csv`, `std.csv`, `ci95.csv`
 (pointwise bootstrap intervals over *dictionary seeds*, after averaging draws),
 `matched_spectrum_tasks.png`, `run_manifest.json`. Compare Bayes floor,
-linear-readout model insufficiency, training-null aliasing, and their cross
+linear-readout model insufficiency, generalized residual aliasing and data insufficiency, and their cross
 terms, not only total error. Keep large raw outputs off Git if needed.
 
 ## 13: a fixed OPT checkpoint and a defined next-token probe

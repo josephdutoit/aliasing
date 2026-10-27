@@ -127,7 +127,7 @@ def main() -> None:
         json.dump({"experiment":"10_near_collision_noise","args":vars(a)|{"output_dir":str(a.output_dir)},
                    "rows":len(rows),"max_decomposition_reconstruction_error":max_reconstruction_error,
                    "max_risk_identity_error":max_identity_error,
-                   "interpretation":"exact_bayes_risk is Bayes uncertainty from the noisy observation channel; GAD aliasing is a distinct training-null-space component"},
+                   "interpretation":"exact_bayes_risk is Bayes uncertainty from the noisy observation channel; GAD aliasing is training-residual leakage into modeled coefficients"},
                   f,indent=2,default=str)
     fig,axes=plt.subplots(2,2,figsize=(13,9),constrained_layout=True)
     chosen_prior=min(a.priors,key=lambda x:abs(x-0.5))
@@ -135,7 +135,7 @@ def main() -> None:
     panels=((axes[0,0],"exact_bayes_risk","Bayes risk from noisy observation"),
             (axes[0,1],"model_insufficiency","population affine-readout insufficiency"),
             (axes[1,0],"test_mse","finite-sample affine-readout risk"),
-            (axes[1,1],"aliasing","GAD training-null-space alias component"))
+            (axes[1,1],"aliasing","GAD residual-leakage alias component"))
     for noise in a.noise_levels:
         sel=[r for r in means if float(r["observation_noise"])==noise and float(r["prior_positive"])==chosen_prior
              and int(float(r["sample_size"]))==max(a.sample_sizes)]
@@ -159,8 +159,8 @@ def main() -> None:
              and float(r["separation"])==max(a.separations)]
         sel.sort(key=lambda r:float(r["sample_size"]))
         x=np.asarray([float(r["sample_size"]) for r in sel]);label=f"noise={noise:g}"
-        for ax,key,label_y in zip(axes,("test_mse","aliasing","data_algorithm"),
-                                  ("finite-sample affine-readout risk","GAD alias component","GAD data/algorithm component")):
+        for ax,key,label_y in zip(axes,("test_mse","aliasing","data_insufficiency"),
+                                  ("finite-sample affine-readout risk","GAD alias component","GAD data-insufficiency component")):
             y=np.asarray([float(r[key]) for r in sel]);ax.plot(x,y,marker="o",label=label)
             bounds=[ci_lookup[(max(a.separations),noise,chosen_prior,float(r["sample_size"]))] for r in sel]
             ax.fill_between(x,[float(r[f"{key}_ci95_low"]) for r in bounds],

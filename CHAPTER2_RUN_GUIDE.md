@@ -1,3 +1,5 @@
+> **GAD definition correction:** see [GAD_DEFINITIONS_AUDIT.md](GAD_DEFINITIONS_AUDIT.md). Historical `finite_support_gad` outputs reversed aliasing and data insufficiency. Old figures require relabeling before GAD interpretation.
+
 # Chapter 2 experiment run guide
 
 Run the small exact checks first. The new experiments save raw per-seed rows,
@@ -120,7 +122,7 @@ zero Bayes risk even though the represented states collide. It is the fastest
 check that the collision diagnostic measures target aliasing rather than
 geometric overlap alone. The script supplies the analytic population-optimal
 head to GAD and stops if the balanced exact-collision control has a nonzero
-GAD alias term. It writes a `run_manifest.json` with formula and decomposition
+GAD data-insufficiency term. Finite-sample residual aliasing can still be nonzero. It writes a `run_manifest.json` with formula and decomposition
 checks.
 
 Experiments 09 and 10 now plot pointwise seed-bootstrap confidence bands.
@@ -147,7 +149,7 @@ enough to check the plotted seed means, pointwise intervals, run settings, and
 decomposition identities. Keep `std.csv` with the archive if disk allows. For
 experiments 09–11, inspect `max_risk_identity_error` in the manifest; for
 experiment 11 also check `max_formula_error` and the per-row
-`balanced_exact_alias_control` field.
+`balanced_exact_data_control` field.
 
 Experiment 11 treats only `separation == 0` as an exact collision. Small
 positive separations remain distinct support points, even when they fall below

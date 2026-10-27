@@ -1,3 +1,5 @@
+> **GAD definition correction:** see [GAD_DEFINITIONS_AUDIT.md](../GAD_DEFINITIONS_AUDIT.md). Historical `finite_support_gad` outputs reversed aliasing and data insufficiency. Old figures require relabeling before GAD interpretation.
+
 # Generalized GAD experiment guide
 
 This directory contains uploaded historical runs, their original scripts, and a

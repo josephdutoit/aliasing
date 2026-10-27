@@ -1,3 +1,5 @@
+> **GAD definition correction:** see [GAD_DEFINITIONS_AUDIT.md](GAD_DEFINITIONS_AUDIT.md). Historical `finite_support_gad` outputs reversed aliasing and data insufficiency. Old figures require relabeling before GAD interpretation.
+
 # Chapter 2: Static geometry, superposition, and aliasing
 
 ## Purpose
@@ -32,7 +34,7 @@ These are **sample-geometry/compressibility diagnostics**. The paper's minimum a
 
 ## Quantities to keep distinct
 
-### 1. Task-relevant aliasing for fixed features
+### 1. Task-relevant data insufficiency for fixed features
 
 Use the repository's existing GAD conventions and exact decompositions. In the scalar noiseless linear case, with training design $Z_T\in\mathbb R^{n_T\times p}$, target coefficients $\beta$, population feature covariance $\Sigma$, and
 $$
@@ -42,7 +44,7 @@ the minimum-norm fitted coefficient is $\widehat\beta=Z_T^\dagger Z_T\beta$, and
 $$
 A_T=\beta^\top Q_T\Sigma Q_T\beta.
 $$
-This is the task-relevant training-nullspace contribution. With noise, multiple outputs, or other GAD terms, use and numerically verify the formulas in `MATHEMATICAL_RESULTS.md`; do not silently replace the full decomposition with this special case.
+This is the task-relevant data-insufficiency contribution, not generalized aliasing. With noise, multiple outputs, or other GAD terms, use and numerically verify the formulas in `MATHEMATICAL_RESULTS.md`; do not silently replace the full decomposition with this special case.
 
 Report direct held-out risk alongside each decomposed term. Include cross-terms when required by the exact identity.
 

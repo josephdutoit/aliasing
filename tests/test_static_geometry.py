@@ -1,4 +1,5 @@
 import numpy as np
+from aliasing.linear import evaluate_width
 
 from aliasing.static_geometry import (
     covariance_pair_metrics,
@@ -62,7 +63,7 @@ def test_finite_support_gad_accepts_precomputed_population_head():
     assert optimized["decomposition_reconstruction_error"] < 1e-12
 
 
-def test_near_collision_svd_projector_does_not_create_spurious_aliasing():
+def test_near_collision_svd_projector_does_not_create_spurious_data_insufficiency():
     separation = 1e-8
     hidden = np.array([[1.0, 0.0], [1.0, separation], [0.0, 0.0]])
     target = np.array([0.5, -0.5, 0.0])
@@ -72,7 +73,7 @@ def test_near_collision_svd_projector_does_not_create_spurious_aliasing():
         hidden, target, hidden, target, probabilities,
         population_head=population_head,
     )
-    assert metrics["aliasing"] < 1e-20
+    assert metrics["data_insufficiency"] < 1e-20
     assert metrics["decomposition_reconstruction_error"] < 1e-8
     assert metrics["risk_identity_error"] < 1e-8
 
@@ -85,3 +86,34 @@ def test_covariance_and_feature_metrics_are_finite():
     assert covariance["post_cov_rank"] >= 1
     assert 0.0 <= direction["feature_direction_coherence"] <= 1.0
     assert direction["feature_pressure"] == 1.5
+
+
+def test_full_rank_design_can_have_gad_aliasing_without_data_insufficiency():
+    h = np.array([[1., 0.], [0., 1.], [1., 1.]])
+    target = np.array([1., 1., -1.])  # orthogonal to the modeled columns
+    g = finite_support_gad(h[:2], target[:2], h, target, np.ones(3)/3)
+    assert np.isclose(g["aliasing"], 2.)
+    assert g["data_insufficiency"] < 1e-25
+    assert np.isclose(g["test_mse"], 3.)
+
+
+def test_unobserved_modeled_direction_is_data_insufficiency_not_aliasing():
+    h = np.eye(2)
+    y = np.array([1., 2.])
+    g = finite_support_gad(h[:1], y[:1], h, y, np.ones(2)/2)
+    assert g["aliasing"] < 1e-25
+    assert np.isclose(g["data_insufficiency"], 2.)
+
+
+def test_shared_decomposition_matches_original_gad_with_explicit_unmodeled_features():
+    rng = np.random.default_rng(802)
+    for n in (2, 5):
+        zt, zp = rng.normal(size=(n, 5)), rng.normal(size=(9, 5))
+        theta = rng.normal(size=5)
+        truth_t, truth_p = zt @ theta, zp @ theta
+        original = evaluate_width(zt, zp, theta, truth_t, 3)
+        current = finite_support_gad(zt[:, :3], truth_t, zp[:, :3], truth_p,
+                                     np.ones(9)/9, population_head=theta[:3])
+        for metric in ("model_insufficiency", "aliasing", "data_insufficiency", "test_mse"):
+            assert np.isclose(current[metric], original[metric], atol=1e-11)
+        assert current["risk_identity_error"] < 1e-11
