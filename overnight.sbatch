@@ -33,6 +33,9 @@ export PYTHONUNBUFFERED=1
 
 "$PYTHON" -c 'import aliasing, matplotlib, numpy, scipy, torch, tqdm'
 SUITE_ARGS=(--max-hours "${GAD_MAX_HOURS:-11.5}" --step-minutes "${GAD_STEP_MINUTES:-25}")
+if [[ -n "${GAD_ONLY:-}" ]]; then
+  SUITE_ARGS+=(--only "$GAD_ONLY")
+fi
 if [[ -n "${GAD_RESUME_RUN_DIR:-}" ]]; then
   SUITE_ARGS+=(--run-dir "$GAD_RESUME_RUN_DIR" --resume)
 else

@@ -217,16 +217,17 @@ def main() -> None:
     }])
     fig, axes = plt.subplots(2, 2, figsize=(13, 9), constrained_layout=True)
     for ax, key, label in zip(axes.flat,
-        ("probe_test_mse", "aliasing", "representation_bayes_mse", "feature_direction_coherence"),
+        ("test_mse", "aliasing", "representation_bayes_mse", "feature_direction_coherence"),
         ("held-out risk", "GAD alias component", "representation Bayes risk", "feature-direction coherence")):
         for task in a.tasks.split(","):
-            sel = [r for r in means if r["task"] == task and float(r["joint_activity"]) == a.joint_probabilities[-1]
+            sel = [r for r in means if r["task"] == task and float(r["joint_activity"]) == a.joint_probabilities[len(a.joint_probabilities) // 2]
                    and int(float(r["feature_count"])) == a.feature_counts[-1]
                    and int(float(r["bottleneck"])) == a.bottlenecks[0]]
             sel.sort(key=lambda r: float(r["sample_size"]))
             if sel: ax.plot([r["sample_size"] for r in sel],[r[key] for r in sel],marker="o",label=task)
         ax.set_xlabel("readout training sample count"); ax.set_ylabel(label); ax.grid(alpha=.25)
     axes[0,0].legend()
+    fig.suptitle(f"Joint activity {a.joint_probabilities[len(a.joint_probabilities) // 2]:g}; features {a.feature_counts[-1]}, width {a.bottlenecks[0]}")
     fig.savefig(a.output_dir/"trained_superposition_aliasing.png",dpi=170,bbox_inches="tight"); plt.close(fig)
     print(f"Wrote {len(rows)} rows to {a.output_dir}")
 
