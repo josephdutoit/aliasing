@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -15,6 +16,7 @@ def learn_global_superposition(d, N=100, sparsity=0.05, global_samples=10000, ep
     This ensures W forms a true superposition polytope rather than memorizing a small batch.
     """
     torch.set_num_threads(1)
+    global_samples = max(1, min(global_samples, int(os.getenv("GAD_GLOBAL_SAMPLES", str(global_samples)))))
     
     # Generate a massive global dataset to learn true feature distributions
     X_np = (np.random.rand(global_samples, N) < sparsity).astype(float)
@@ -23,7 +25,7 @@ def learn_global_superposition(d, N=100, sparsity=0.05, global_samples=10000, ep
     W = nn.Parameter(torch.randn(d, N) / np.sqrt(d))
     optimizer = optim.Adam([W], lr=0.01)
     
-    for _ in range(epochs):
+    for _ in range(max(1, min(epochs, int(os.getenv("GAD_EPOCHS", str(epochs)))))):
         optimizer.zero_grad()
         h = torch.relu(X @ W.T)
         X_hat = h @ W
@@ -76,13 +78,13 @@ def evaluate_aliasing_geometry(d, n=40, N=100, sparsity=0.05, seed=None):
         'pinv_relu_learned': get_pinv_norm(H_relu_learned)
     }
 
-def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=10):
+def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=max(1, min(10, int(os.getenv("GAD_TRIALS", "10"))))):
     results_agg = {d: {'lin_learn': [], 'relu_rand': [], 'relu_learn': []} for d in d_values}
     tasks = [(d, n, N, 0.05, d * 1000 + trial) for d in d_values for trial in range(trials_per_d)]
             
     print(f"Running {len(tasks)} parallel experiments...")
     
-    with concurrent.futures.ProcessPoolExecutor(max_workers=28) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(evaluate_aliasing_geometry, *task) for task in tasks]
         
         for future in concurrent.futures.as_completed(futures):
@@ -102,10 +104,10 @@ def run_parallel_sweep(d_values, n=40, N=100, trials_per_d=10):
 if __name__ == '__main__':
     N_features = 100
     n_samples = 40
-    d_sweep = list(range(2, 96, 2))
+    d_sweep = list(range(2, 96, 2))[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
     d_plot, pinv_lin_learn, pinv_relu_rand, pinv_relu_learn = run_parallel_sweep(
-        d_sweep, n=n_samples, N=N_features, trials_per_d=10
+        d_sweep, n=n_samples, N=N_features, trials_per_d=max(1, min(10, int(os.getenv("GAD_TRIALS", "10"))))
     )
     
     plt.figure(figsize=(10, 6))

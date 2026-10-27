@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 import torch.nn as nn
@@ -38,7 +39,7 @@ def train_tms_autoencoder(X, N_capacity, epochs=2500, lr=0.01, reg_type='none'):
     
     optimizer = optim.AdamW([W, b1, b2], lr=lr, weight_decay=wd)
     
-    for _ in range(epochs):
+    for _ in range(max(1, min(epochs, int(os.getenv("GAD_EPOCHS", str(epochs)))))):
         optimizer.zero_grad()
         h = torch.relu(X @ W.T + b1)
         X_hat = h @ W + b2
@@ -96,13 +97,13 @@ def run_regularization_experiment(d, N=100, D_in=500, prob_active=0.05, seed=Non
         'alias_l1': get_pinv_norm(H_l1)
     }
 
-def run_smooth_sweep(d_values, N=100, D_in=500, trials_per_d=20):
+def run_smooth_sweep(d_values, N=100, D_in=500, trials_per_d=max(1, min(20, int(os.getenv("GAD_TRIALS", "20"))))):
     results = {d: {'rand': [], 'unreg': [], 'l2': [], 'l1': []} for d in d_values}
     tasks = [(d, N, D_in, 0.05, d * 1000 + t) for d in d_values for t in range(trials_per_d)]
             
     print(f"Running {len(tasks)} parallel experiments (Averaging {trials_per_d} seeds per d)...")
     
-    with concurrent.futures.ProcessPoolExecutor(max_workers=28) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max(1, min(28, int(os.getenv("GAD_MAX_WORKERS", "28"))))) as executor:
         futures = [executor.submit(run_regularization_experiment, *task) for task in tasks]
         for future in concurrent.futures.as_completed(futures):
             res = future.result()
@@ -124,10 +125,10 @@ def run_smooth_sweep(d_values, N=100, D_in=500, trials_per_d=20):
 if __name__ == '__main__':
     N_capacity = 100
     D_in_ambient = 500
-    d_sweep = list(range(10, 210, 10))
+    d_sweep = list(range(10, 210, 10))[::max(1, int(os.getenv("GAD_GRID_STRIDE", "1")))]
     
     d_plot, alias_r, alias_unreg, alias_l2, alias_l1 = run_smooth_sweep(
-        d_sweep, N=N_capacity, D_in=D_in_ambient, trials_per_d=20
+        d_sweep, N=N_capacity, D_in=D_in_ambient, trials_per_d=max(1, min(20, int(os.getenv("GAD_TRIALS", "20"))))
     )
     
     plt.figure(figsize=(12, 7))
