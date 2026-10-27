@@ -8,3 +8,5 @@ __pycache__/
 slurm_logs/
 outputs/overnight/
 gad-overnight-*.log
+outputs/learned_aliasing/
+learned-gad-*.log
