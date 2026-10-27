@@ -1,5 +1,6 @@
 # Aliasing experiments
 
+- [GAD mechanism checks: reference/readout stability, encoder/decoder ablation, controlled residual probes](GAD_MECHANISM_CHECKS.md)
 - [Learned aliasing hypotheses: controlled experiments and cluster commands](LEARNED_ALIASING_EXPERIMENTS.md)
 - [GAD definitions audit and corrected result interpretation](GAD_DEFINITIONS_AUDIT.md)
 - [Submit the overnight suite](OVERNIGHT_RUN.md)
