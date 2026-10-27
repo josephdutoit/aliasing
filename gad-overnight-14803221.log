@@ -1,0 +1,9 @@
+Suite: /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221
+[02] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py --sweep samplewise --num-seeds 6 --num-workers 12 --n-test 1024 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/02
+[02] completed (0.17 min)
+[02-featurewise] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py --sweep featurewise --num-seeds 6 --num-workers 12 --n-test 1024 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/02-featurewise
+[02-featurewise] completed (0.2 min)
+[06] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/06_trained_sparse_feature_geometry.py --feature-counts 8,10 --num-seeds 4 --epochs 250 --n-test 512 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/06
+[06] completed (5.08 min)
+Final report: /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/SUMMARY.md
+Shareable figures and aggregate tables: /home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/results_bundle.zip

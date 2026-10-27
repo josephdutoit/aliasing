@@ -1,0 +1,115 @@
+{
+  "started_utc": "2026-10-27T15:59:12+00:00",
+  "git_revision": "06493ebbd0d68f044a0db092e2552d61dc4246f4",
+  "python": "/home/jcdutoit/aliasing/.venv/bin/python",
+  "parameters": {
+    "workers": 12,
+    "step_minutes": 60.0,
+    "max_hours": 11.5,
+    "GAD_EPOCHS": "200",
+    "GAD_TRIALS": "3",
+    "GAD_GRID_STRIDE": "4",
+    "GAD_GLOBAL_SAMPLES": "2000"
+  },
+  "experiments": {
+    "02": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py",
+        "--sweep",
+        "samplewise",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12",
+        "--n-test",
+        "1024",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/02"
+      ],
+      "directory": "02",
+      "log": "02/stdout.log",
+      "script_sha256": "414de4610dff586e8d5c5b3b791086c0ac16640232ecb28e58c60252ba7ac887",
+      "started_utc": "2026-10-27T15:59:12+00:00",
+      "time_limit_seconds": 3600,
+      "minutes": 0.17,
+      "exit_code": 0,
+      "artifacts": [
+        "02/ci95.csv",
+        "02/mean.csv",
+        "02/random_feature_aliasing.png",
+        "02/raw.csv",
+        "02/std.csv"
+      ],
+      "finished_utc": "2026-10-27T15:59:22+00:00"
+    },
+    "02-featurewise": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py",
+        "--sweep",
+        "featurewise",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12",
+        "--n-test",
+        "1024",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/02-featurewise"
+      ],
+      "directory": "02-featurewise",
+      "log": "02-featurewise/stdout.log",
+      "script_sha256": "414de4610dff586e8d5c5b3b791086c0ac16640232ecb28e58c60252ba7ac887",
+      "started_utc": "2026-10-27T15:59:22+00:00",
+      "time_limit_seconds": 3600,
+      "minutes": 0.2,
+      "exit_code": 0,
+      "artifacts": [
+        "02-featurewise/ci95.csv",
+        "02-featurewise/mean.csv",
+        "02-featurewise/paired_contrasts.csv",
+        "02-featurewise/random_feature_aliasing.png",
+        "02-featurewise/raw.csv",
+        "02-featurewise/std.csv"
+      ],
+      "finished_utc": "2026-10-27T15:59:34+00:00"
+    },
+    "06": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/06_trained_sparse_feature_geometry.py",
+        "--feature-counts",
+        "8,10",
+        "--num-seeds",
+        "4",
+        "--epochs",
+        "250",
+        "--n-test",
+        "512",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T155912Z-14803221/06"
+      ],
+      "directory": "06",
+      "log": "06/stdout.log",
+      "script_sha256": "b22c3d92d314a1b4b9217c9c86b8644e912d8623a8bf4f016ae23fc69b634d11",
+      "started_utc": "2026-10-27T15:59:34+00:00",
+      "time_limit_seconds": 3600,
+      "minutes": 5.08,
+      "exit_code": 0,
+      "artifacts": [
+        "06/ci95.csv",
+        "06/config.csv",
+        "06/mean.csv",
+        "06/raw.csv",
+        "06/std.csv",
+        "06/trained_sparse_feature_geometry.png"
+      ],
+      "finished_utc": "2026-10-27T16:04:39+00:00"
+    }
+  },
+  "updated_utc": "2026-10-27T16:04:39+00:00"
+}
