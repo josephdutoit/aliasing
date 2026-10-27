@@ -1,0 +1,24 @@
+{
+  "experiment": "glm-samplewise",
+  "script": "generalized_gad/glm_gad_samplewise.py",
+  "script_sha256": "1a9a156a01f0d1aab94c07c51b20a93674e5bff992b46085410deb2f8e82232a",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/glm_gad_samplewise.py",
+    "--num-seeds",
+    "6",
+    "--num-workers",
+    "12"
+  ],
+  "started_utc": "2026-10-27T08:59:30.016326+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:01:07.188745+00:00",
+  "figures": [
+    "exponential_samplewise.png",
+    "gaussian_samplewise.png",
+    "logistic_samplewise.png",
+    "poisson_samplewise.png"
+  ]
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py", line 234, in <module>
+    if __name__ == "__main__": main()
+                               ~~~~^^
+  File "/home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py", line 227, in main
+    if sel: ax.plot([r["sample_size"] for r in sel],[r[key] for r in sel],marker="o",label=task)
+                                                     ~^^^^^
+KeyError: 'probe_test_mse'

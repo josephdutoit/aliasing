@@ -1,0 +1,11 @@
+usage: 02_random_feature_aliasing.py [-h] --sweep {featurewise,samplewise}
+                                     [--num-seeds NUM_SEEDS]
+                                     [--num-workers NUM_WORKERS]
+                                     [--sample-sizes SAMPLE_SIZES]
+                                     [--modeled-features MODELED_FEATURES]
+                                     [--full-features FULL_FEATURES]
+                                     [--input-dim INPUT_DIM]
+                                     [--n-train N_TRAIN] [--n-test N_TEST]
+                                     [--noise-std NOISE_STD]
+                                     --output-dir OUTPUT_DIR
+02_random_feature_aliasing.py: error: the following arguments are required: --sweep

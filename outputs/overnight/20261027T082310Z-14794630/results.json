@@ -1,0 +1,692 @@
+{
+  "started_utc": "2026-10-27T08:23:10+00:00",
+  "git_revision": "d3b4d4f187e2c4648cf017b413cffe97e26d0fb7",
+  "python": "/home/jcdutoit/aliasing/.venv/bin/python",
+  "parameters": {
+    "workers": 12,
+    "step_minutes": 25.0,
+    "max_hours": 11.5,
+    "GAD_EPOCHS": "200",
+    "GAD_TRIALS": "3",
+    "GAD_GRID_STRIDE": "4",
+    "GAD_GLOBAL_SAMPLES": "2000"
+  },
+  "experiments": {
+    "04": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/04_superposition_aliasing.py",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/04"
+      ],
+      "directory": "04",
+      "log": "04/stdout.log",
+      "script_sha256": "892904b81bce8be214765780b3187ca20a3b8427c150448844b7b7a2a646a495",
+      "started_utc": "2026-10-27T08:23:10+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.08,
+      "exit_code": 0,
+      "artifacts": [
+        "04/superposition_aliasing.csv",
+        "04/superposition_aliasing.png"
+      ],
+      "finished_utc": "2026-10-27T08:23:15+00:00"
+    },
+    "05": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/05_static_dictionary_geometry.py",
+        "--num-seeds",
+        "6",
+        "--sample-sizes",
+        "8,16,32",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/05"
+      ],
+      "directory": "05",
+      "log": "05/stdout.log",
+      "script_sha256": "6ff88230960f3f98ef9810a13281a357f41b5246595687961b500e4cd58436ac",
+      "started_utc": "2026-10-27T08:23:15+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.12,
+      "exit_code": 0,
+      "artifacts": [
+        "05/ci95.csv",
+        "05/config.csv",
+        "05/mean.csv",
+        "05/raw.csv",
+        "05/static_dictionary_geometry.png"
+      ],
+      "finished_utc": "2026-10-27T08:23:22+00:00"
+    },
+    "06": {
+      "status": "timed_out",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/06_trained_sparse_feature_geometry.py",
+        "--num-seeds",
+        "4",
+        "--epochs",
+        "250",
+        "--n-test",
+        "512",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/06"
+      ],
+      "directory": "06",
+      "log": "06/stdout.log",
+      "script_sha256": "6ea1e051e8cfe9ca4c2c5a942d2fcfaaef03f16a64021c1bfb2a21558df852a5",
+      "started_utc": "2026-10-27T08:23:22+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 25.01,
+      "exit_code": -15,
+      "artifacts": [],
+      "finished_utc": "2026-10-27T08:48:23+00:00",
+      "reason": "exceeded 25.0 minutes"
+    },
+    "07": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/07_static_geometry_factorial.py",
+        "--feature-counts",
+        "6,8",
+        "--sample-sizes",
+        "8,32,96",
+        "--joint-probabilities",
+        "0,0.1,0.2",
+        "--tasks",
+        "sum,pair_contrast",
+        "--num-seeds",
+        "6",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/07"
+      ],
+      "directory": "07",
+      "log": "07/stdout.log",
+      "script_sha256": "2c593178e9f10e9bf1b80ee4ef9f62af923f5f64dac36432d32f7ba9239ec82e",
+      "started_utc": "2026-10-27T08:48:23+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 1.62,
+      "exit_code": 0,
+      "artifacts": [
+        "07/ci95.csv",
+        "07/config.csv",
+        "07/mean.csv",
+        "07/raw.csv",
+        "07/static_geometry_factorial.png",
+        "07/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:50:00+00:00"
+    },
+    "08": {
+      "status": "failed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py",
+        "--feature-counts",
+        "8,10",
+        "--bottlenecks",
+        "2,4",
+        "--sample-sizes",
+        "16,64,128",
+        "--joint-probabilities",
+        "0,0.1,0.2",
+        "--tasks",
+        "sum,pair_contrast",
+        "--encoder-samples",
+        "1024",
+        "--num-seeds",
+        "4",
+        "--num-readout-draws",
+        "2",
+        "--epochs",
+        "250",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/08"
+      ],
+      "directory": "08",
+      "log": "08/stdout.log",
+      "script_sha256": "078726235fb91c15358ee09d7bf80ee93b62d0a7a65b82d9a25e1b18e92db6fe",
+      "started_utc": "2026-10-27T08:50:00+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 7.75,
+      "exit_code": 1,
+      "artifacts": [
+        "08/ci95.csv",
+        "08/config.csv",
+        "08/mean.csv",
+        "08/raw.csv",
+        "08/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:57:45+00:00",
+      "reason": "Traceback (most recent call last):\n |   File \"/home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py\", line 234, in <module>\n |     if __name__ == \"__main__\": main()\n |                                ~~~~^^\n |   File \"/home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py\", line 227, in main\n |     if sel: ax.plot([r[\"sample_size\"] for r in sel],[r[key] for r in sel],marker=\"o\",label=task)\n |                                                      ~^^^^^\n | KeyError: 'probe_test_mse'\n"
+    },
+    "09": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/09_double_descent_decomposition.py",
+        "--widths",
+        "8,16,24,32,40",
+        "--sample-sizes",
+        "16,24,32,40,64",
+        "--covariances",
+        "isotropic,spiked",
+        "--num-seeds",
+        "8",
+        "--n-test",
+        "1024",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/09"
+      ],
+      "directory": "09",
+      "log": "09/stdout.log",
+      "script_sha256": "ee1a6863271f75cc3e21235fae8aa873250f8450a197dd0c67b6534562fa8fe8",
+      "started_utc": "2026-10-27T08:57:45+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.18,
+      "exit_code": 0,
+      "artifacts": [
+        "09/ci95.csv",
+        "09/config.csv",
+        "09/double_descent_decomposition.png",
+        "09/double_descent_isotropic_first_pc.png",
+        "09/double_descent_isotropic_random.png",
+        "09/double_descent_spiked_first_pc.png",
+        "09/double_descent_spiked_random.png",
+        "09/mean.csv",
+        "09/raw.csv",
+        "09/run_manifest.json",
+        "09/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:57:56+00:00"
+    },
+    "10": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/10_near_collision_noise.py",
+        "--separations",
+        "0,0.03,0.3,1",
+        "--noise-levels",
+        "0.03,0.1,0.3",
+        "--sample-sizes",
+        "8,32,128",
+        "--priors",
+        "0.2,0.5",
+        "--num-seeds",
+        "8",
+        "--n-test",
+        "1024",
+        "--quadrature-order",
+        "40",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/10"
+      ],
+      "directory": "10",
+      "log": "10/stdout.log",
+      "script_sha256": "e901f6ad2d608309867726fb3dfe6c0ce1960334f211fe5b3ad2edd8d4ae222e",
+      "started_utc": "2026-10-27T08:57:56+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.13,
+      "exit_code": 0,
+      "artifacts": [
+        "10/ci95.csv",
+        "10/config.csv",
+        "10/mean.csv",
+        "10/near_collision_noise.png",
+        "10/near_collision_sample_convergence.png",
+        "10/raw.csv",
+        "10/run_manifest.json",
+        "10/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:58:04+00:00"
+    },
+    "11": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/11_collision_mass_law.py",
+        "--collision-masses",
+        "0.1,0.5,0.9",
+        "--conditional-masses",
+        "0.1,0.5,0.9",
+        "--separations",
+        "0,1e-3,0.1",
+        "--sample-sizes",
+        "8,32,128",
+        "--num-seeds",
+        "8",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/11"
+      ],
+      "directory": "11",
+      "log": "11/stdout.log",
+      "script_sha256": "2f81621ace610cab51a2fdc790b33309a6a8adb66522ac528993b71948a9ebfe",
+      "started_utc": "2026-10-27T08:58:04+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.12,
+      "exit_code": 0,
+      "artifacts": [
+        "11/ci95.csv",
+        "11/collision_mass_law.png",
+        "11/config.csv",
+        "11/mean.csv",
+        "11/raw.csv",
+        "11/run_manifest.json",
+        "11/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:58:11+00:00"
+    },
+    "12": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/12_matched_spectrum_tasks.py",
+        "--num-seeds",
+        "8",
+        "--num-draws",
+        "2",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/12"
+      ],
+      "directory": "12",
+      "log": "12/stdout.log",
+      "script_sha256": "7b41ca7117cb208c20feefd28447bc69c4c62baebb994976596a7f3def9a158c",
+      "started_utc": "2026-10-27T08:58:11+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.1,
+      "exit_code": 0,
+      "artifacts": [
+        "12/ci95.csv",
+        "12/matched_spectrum_tasks.png",
+        "12/mean.csv",
+        "12/raw.csv",
+        "12/run_manifest.json",
+        "12/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:58:18+00:00"
+    },
+    "01": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/01_linear_aliasing_double_descent.py",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/01"
+      ],
+      "directory": "01",
+      "log": "01/stdout.log",
+      "script_sha256": "500e965f2d0e95efda0631065ad09636c21fb3b7399dd1c6b50dfd282be380c3",
+      "started_utc": "2026-10-27T08:58:18+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.17,
+      "exit_code": 0,
+      "artifacts": [
+        "01/linear_aliasing.png",
+        "01/metrics.csv"
+      ],
+      "finished_utc": "2026-10-27T08:58:28+00:00"
+    },
+    "02": {
+      "status": "failed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/02"
+      ],
+      "directory": "02",
+      "log": "02/stdout.log",
+      "script_sha256": "414de4610dff586e8d5c5b3b791086c0ac16640232ecb28e58c60252ba7ac887",
+      "started_utc": "2026-10-27T08:58:28+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.07,
+      "exit_code": 2,
+      "artifacts": [],
+      "finished_utc": "2026-10-27T08:58:32+00:00",
+      "reason": "                                     [--sample-sizes SAMPLE_SIZES]\n |                                      [--modeled-features MODELED_FEATURES]\n |                                      [--full-features FULL_FEATURES]\n |                                      [--input-dim INPUT_DIM]\n |                                      [--n-train N_TRAIN] [--n-test N_TEST]\n |                                      [--noise-std NOISE_STD]\n |                                      --output-dir OUTPUT_DIR\n | 02_random_feature_aliasing.py: error: the following arguments are required: --sweep\n"
+    },
+    "03": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/experiments/03_feature_learning_mlp.py",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12",
+        "--output-dir",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/03"
+      ],
+      "directory": "03",
+      "log": "03/stdout.log",
+      "script_sha256": "830515bd43b4690174962fe476a60031e808d036c18ba1efbbdbed3f50b1c8e1",
+      "started_utc": "2026-10-27T08:58:32+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.95,
+      "exit_code": 0,
+      "artifacts": [
+        "03/ci95.csv",
+        "03/mean.csv",
+        "03/mlp_aliasing.png",
+        "03/paired_width_contrasts.csv",
+        "03/raw.csv",
+        "03/std.csv"
+      ],
+      "finished_utc": "2026-10-27T08:59:29+00:00"
+    },
+    "glm-samplewise": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "glm-samplewise",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-samplewise",
+        "--",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12"
+      ],
+      "directory": "glm-samplewise",
+      "log": "glm-samplewise/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T08:59:29+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 1.63,
+      "exit_code": 0,
+      "artifacts": [
+        "glm-samplewise/glm-samplewise/20261027T085929Z-3841041/exponential_samplewise.png",
+        "glm-samplewise/glm-samplewise/20261027T085929Z-3841041/gaussian_samplewise.png",
+        "glm-samplewise/glm-samplewise/20261027T085929Z-3841041/logistic_samplewise.png",
+        "glm-samplewise/glm-samplewise/20261027T085929Z-3841041/manifest.json",
+        "glm-samplewise/glm-samplewise/20261027T085929Z-3841041/poisson_samplewise.png"
+      ],
+      "finished_utc": "2026-10-27T09:01:07+00:00"
+    },
+    "glm-featurewise": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "glm-featurewise",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-featurewise",
+        "--",
+        "--num-seeds",
+        "6",
+        "--num-workers",
+        "12"
+      ],
+      "directory": "glm-featurewise",
+      "log": "glm-featurewise/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:01:07+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 1.62,
+      "exit_code": 0,
+      "artifacts": [
+        "glm-featurewise/glm-featurewise/20261027T090108Z-3842098/exponential_featurewise.png",
+        "glm-featurewise/glm-featurewise/20261027T090108Z-3842098/gaussian_featurewise.png",
+        "glm-featurewise/glm-featurewise/20261027T090108Z-3842098/logistic_featurewise.png",
+        "glm-featurewise/glm-featurewise/20261027T090108Z-3842098/manifest.json",
+        "glm-featurewise/glm-featurewise/20261027T090108Z-3842098/poisson_featurewise.png"
+      ],
+      "finished_utc": "2026-10-27T09:02:44+00:00"
+    },
+    "frozen-superposition": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "frozen-superposition",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/frozen-superposition"
+      ],
+      "directory": "frozen-superposition",
+      "log": "frozen-superposition/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:02:44+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.2,
+      "exit_code": 0,
+      "artifacts": [
+        "frozen-superposition/frozen-superposition/20261027T090245Z-3842634/manifest.json",
+        "frozen-superposition/frozen-superposition/20261027T090245Z-3842634/superposition_aliasing_mitigation.png"
+      ],
+      "finished_utc": "2026-10-27T09:02:56+00:00"
+    },
+    "learned-superposition": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "learned-superposition",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/learned-superposition"
+      ],
+      "directory": "learned-superposition",
+      "log": "learned-superposition/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:02:56+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.58,
+      "exit_code": 0,
+      "artifacts": [
+        "learned-superposition/learned-superposition/20261027T090257Z-3842663/manifest.json",
+        "learned-superposition/learned-superposition/20261027T090257Z-3842663/superposition_aliasing_bias_only.png"
+      ],
+      "finished_utc": "2026-10-27T09:03:31+00:00"
+    },
+    "gaussian-superposition": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "gaussian-superposition",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/gaussian-superposition"
+      ],
+      "directory": "gaussian-superposition",
+      "log": "gaussian-superposition/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:03:32+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.47,
+      "exit_code": 0,
+      "artifacts": [
+        "gaussian-superposition/gaussian-superposition/20261027T090332Z-3843127/corrected_superposition_aliasing.png",
+        "gaussian-superposition/gaussian-superposition/20261027T090332Z-3843127/manifest.json"
+      ],
+      "finished_utc": "2026-10-27T09:04:00+00:00"
+    },
+    "no-bias-superposition": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "no-bias-superposition",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/no-bias-superposition"
+      ],
+      "directory": "no-bias-superposition",
+      "log": "no-bias-superposition/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:04:00+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.53,
+      "exit_code": 0,
+      "artifacts": [
+        "no-bias-superposition/no-bias-superposition/20261027T090400Z-3843299/clean_superposition_aliasing.png",
+        "no-bias-superposition/no-bias-superposition/20261027T090400Z-3843299/manifest.json"
+      ],
+      "finished_utc": "2026-10-27T09:04:32+00:00"
+    },
+    "embedded-complexity": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "embedded-complexity",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-complexity"
+      ],
+      "directory": "embedded-complexity",
+      "log": "embedded-complexity/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:04:32+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.52,
+      "exit_code": 0,
+      "artifacts": [
+        "embedded-complexity/embedded-complexity/20261027T090432Z-3843582/embedded_complexity_double_descent.png",
+        "embedded-complexity/embedded-complexity/20261027T090432Z-3843582/manifest.json"
+      ],
+      "finished_utc": "2026-10-27T09:05:03+00:00"
+    },
+    "embedded-mechanics": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "embedded-mechanics",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-mechanics"
+      ],
+      "directory": "embedded-mechanics",
+      "log": "embedded-mechanics/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:05:03+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.55,
+      "exit_code": 0,
+      "artifacts": [
+        "embedded-mechanics/embedded-mechanics/20261027T090503Z-3843889/manifest.json",
+        "embedded-mechanics/embedded-mechanics/20261027T090503Z-3843889/superposition_mechanics.png"
+      ],
+      "finished_utc": "2026-10-27T09:05:36+00:00"
+    },
+    "embedded-regularization": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "embedded-regularization",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-regularization"
+      ],
+      "directory": "embedded-regularization",
+      "log": "embedded-regularization/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:05:36+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.48,
+      "exit_code": 0,
+      "artifacts": [
+        "embedded-regularization/embedded-regularization/20261027T090536Z-3844149/manifest.json",
+        "embedded-regularization/embedded-regularization/20261027T090536Z-3844149/regularization_comparison_aliasing.png"
+      ],
+      "finished_utc": "2026-10-27T09:06:05+00:00"
+    },
+    "embedded-heatmap": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/experiment_cli.py",
+        "run",
+        "embedded-heatmap",
+        "--output-root",
+        "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-heatmap"
+      ],
+      "directory": "embedded-heatmap",
+      "log": "embedded-heatmap/stdout.log",
+      "script_sha256": "ebc3ce7cb2835ebc9de46124abcd42a30d76574bc081084bb94244fece84fac3",
+      "started_utc": "2026-10-27T09:06:05+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.5,
+      "exit_code": 0,
+      "artifacts": [
+        "embedded-heatmap/embedded-heatmap/20261027T090606Z-3844436/aliasing_2d_phase_diagram.png",
+        "embedded-heatmap/embedded-heatmap/20261027T090606Z-3844436/manifest.json"
+      ],
+      "finished_utc": "2026-10-27T09:06:35+00:00"
+    },
+    "legacy-exponential_regression": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/ggad_old/exponential_regression.py"
+      ],
+      "directory": "legacy-exponential_regression",
+      "log": "legacy-exponential_regression/stdout.log",
+      "script_sha256": "d53cc5f83d51f32f4dcbd9b19c60c67880dfe61e0978fe78aca87cd131098a23",
+      "started_utc": "2026-10-27T09:06:35+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.4,
+      "exit_code": 0,
+      "artifacts": [
+        "legacy-exponential_regression/exponential_regression.png"
+      ],
+      "finished_utc": "2026-10-27T09:06:59+00:00"
+    },
+    "legacy-logisitic_regression": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/ggad_old/logisitic_regression.py"
+      ],
+      "directory": "legacy-logisitic_regression",
+      "log": "legacy-logisitic_regression/stdout.log",
+      "script_sha256": "2b410dc7fa59d3a2918682bf186b3aa33c22bfdd6effe546faafa40b34333251",
+      "started_utc": "2026-10-27T09:06:59+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.37,
+      "exit_code": 0,
+      "artifacts": [
+        "legacy-logisitic_regression/bregman_gad.png"
+      ],
+      "finished_utc": "2026-10-27T09:07:21+00:00"
+    },
+    "legacy-poisson_regression": {
+      "status": "completed",
+      "command": [
+        "/home/jcdutoit/aliasing/.venv/bin/python",
+        "/home/jcdutoit/aliasing/generalized_gad/ggad_old/poisson_regression.py"
+      ],
+      "directory": "legacy-poisson_regression",
+      "log": "legacy-poisson_regression/stdout.log",
+      "script_sha256": "ad7267a6bf451c2d03a61900f2cdeb90d2b9b956b9581af46aa1b75671768f2c",
+      "started_utc": "2026-10-27T09:07:21+00:00",
+      "time_limit_seconds": 1500,
+      "minutes": 0.47,
+      "exit_code": 0,
+      "artifacts": [
+        "legacy-poisson_regression/poisson_regression.png"
+      ],
+      "finished_utc": "2026-10-27T09:07:49+00:00"
+    },
+    "13": {
+      "status": "skipped",
+      "reason": "requires GAD_FEATURES_NPZ or GAD_TEXT_FILE (plus a cached model)"
+    }
+  },
+  "updated_utc": "2026-10-27T09:07:50+00:00"
+}

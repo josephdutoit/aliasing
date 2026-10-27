@@ -1,0 +1,35 @@
+{
+  "experiment": "09_double_descent_decomposition",
+  "args": {
+    "widths": [
+      8,
+      16,
+      24,
+      32,
+      40
+    ],
+    "sample_sizes": [
+      16,
+      24,
+      32,
+      40,
+      64
+    ],
+    "input_dim": 20,
+    "covariances": "isotropic,spiked",
+    "tasks": "first_pc,random",
+    "num_seeds": 8,
+    "n_test": 1024,
+    "seed": 20261023,
+    "output_dir": "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/09"
+  },
+  "rows": 800,
+  "max_decomposition_reconstruction_error": 2.0463630789890885e-12,
+  "max_risk_identity_error": 1.4582970497773533e-10,
+  "plot_configs": [
+    "isotropic_first_pc",
+    "isotropic_random",
+    "spiked_first_pc",
+    "spiked_random"
+  ]
+}

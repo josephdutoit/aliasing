@@ -1,0 +1,20 @@
+/home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py:353: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_mi_list, label='Model Insufficiency ($\mathcal{E}_{mi}$)', color='green', linewidth=1.5)
+/home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py:354: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_ga_list, label='Generalized Aliasing ($\mathcal{E}_{ga}$)', color='red', linewidth=2)
+/home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py:355: SyntaxWarning: invalid escape sequence '\m'
+  ax1.semilogy(N_vals, E_di_list, label='Data Insufficiency ($\mathcal{E}_{di}$)', color='blue', linewidth=2)
+--- Running Parameter-Wise GAD for: LOGISTIC (6 seeds, 12 workers) ---
+  Using 12 workers
+Seeds:   0%|          | 0/6 [00:00<?, ?it/s]Seeds:  17%|█▋        | 1/6 [00:10<00:52, 10.48s/it]Seeds:  50%|█████     | 3/6 [00:11<00:09,  3.25s/it]Seeds: 100%|██████████| 6/6 [00:11<00:00,  1.99s/it]
+--- Running Parameter-Wise GAD for: GAUSSIAN (6 seeds, 12 workers) ---
+  Using 12 workers
+Seeds:   0%|          | 0/6 [00:00<?, ?it/s]Seeds:  17%|█▋        | 1/6 [00:10<00:52, 10.51s/it]Seeds:  33%|███▎      | 2/6 [00:11<00:18,  4.65s/it]Seeds:  83%|████████▎ | 5/6 [00:11<00:01,  1.45s/it]Seeds: 100%|██████████| 6/6 [00:11<00:00,  1.94s/it]
+--- Running Parameter-Wise GAD for: POISSON (6 seeds, 12 workers) ---
+  Using 12 workers
+Seeds:   0%|          | 0/6 [00:00<?, ?it/s]/home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py:253: UserWarning: Non-finite fit/weights at N=70, dropping from average
+  return run_single_experiment_sweeping_N(distribution, seed)
+Seeds:  17%|█▋        | 1/6 [00:32<02:41, 32.28s/it]Seeds: 100%|██████████| 6/6 [00:32<00:00,  5.38s/it]
+--- Running Parameter-Wise GAD for: EXPONENTIAL (6 seeds, 12 workers) ---
+  Using 12 workers
+Seeds:   0%|          | 0/6 [00:00<?, ?it/s]Seeds:  17%|█▋        | 1/6 [00:12<01:01, 12.34s/it]Seeds:  33%|███▎      | 2/6 [00:13<00:23,  5.97s/it]Seeds: 100%|██████████| 6/6 [00:13<00:00,  2.31s/it]

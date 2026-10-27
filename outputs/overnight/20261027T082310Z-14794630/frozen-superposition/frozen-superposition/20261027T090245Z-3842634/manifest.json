@@ -1,0 +1,17 @@
+{
+  "experiment": "frozen-superposition",
+  "script": "generalized_gad/frozen_superposition.py",
+  "script_sha256": "ccbe119f510b5e4fe74c6174baef60f3dd3d56c1dad88946ca69724b88bdc9f8",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/frozen_superposition.py"
+  ],
+  "started_utc": "2026-10-27T09:02:45.456368+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:02:56.008135+00:00",
+  "figures": [
+    "superposition_aliasing_mitigation.png"
+  ]
+}

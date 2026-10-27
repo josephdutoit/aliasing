@@ -1,0 +1,2 @@
+dimension,feature_counts,sample_sizes,joint_probabilities,tasks,families,marginal,num_seeds,seed
+6,"6,8","8,32,96","0.0,0.1,0.2","sum,pair_contrast","random,structured",0.2,6,20261023

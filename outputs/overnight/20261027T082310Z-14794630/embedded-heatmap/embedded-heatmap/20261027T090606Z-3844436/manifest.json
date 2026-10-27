@@ -1,0 +1,17 @@
+{
+  "experiment": "embedded-heatmap",
+  "script": "generalized_gad/aliasing_heatmap.py",
+  "script_sha256": "90fd5cc2e78affa34dc91f14abf503fcd2163c27dd6a4558330787cd3e0da3fe",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/aliasing_heatmap.py"
+  ],
+  "started_utc": "2026-10-27T09:06:06.248595+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:06:35.362288+00:00",
+  "figures": [
+    "aliasing_2d_phase_diagram.png"
+  ]
+}

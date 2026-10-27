@@ -1,0 +1,24 @@
+{
+  "experiment": "glm-featurewise",
+  "script": "generalized_gad/glm_gad_featurewise.py",
+  "script_sha256": "1a54631df3f17501fbcfba1bccdf361d224c49fe17cd47b060548bb1220d2ea8",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py",
+    "--num-seeds",
+    "6",
+    "--num-workers",
+    "12"
+  ],
+  "started_utc": "2026-10-27T09:01:08.534062+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:02:44.401258+00:00",
+  "figures": [
+    "exponential_featurewise.png",
+    "gaussian_featurewise.png",
+    "logistic_featurewise.png",
+    "poisson_featurewise.png"
+  ]
+}

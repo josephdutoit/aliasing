@@ -1,0 +1,4 @@
+Run: /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/aliasing_heatmap.py
+Results: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-heatmap/embedded-heatmap/20261027T090606Z-3844436
+Log: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-heatmap/embedded-heatmap/20261027T090606Z-3844436/stdout.log
+Manifest: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-heatmap/embedded-heatmap/20261027T090606Z-3844436/manifest.json

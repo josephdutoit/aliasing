@@ -1,0 +1,17 @@
+{
+  "experiment": "learned-superposition",
+  "script": "generalized_gad/superposition.py",
+  "script_sha256": "ad99385f2f1c0ac0caeb63b911721ad4cb8b6ed572ae1751a2b9d37a11698211",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/superposition.py"
+  ],
+  "started_utc": "2026-10-27T09:02:57.401683+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:03:31.859442+00:00",
+  "figures": [
+    "superposition_aliasing_bias_only.png"
+  ]
+}

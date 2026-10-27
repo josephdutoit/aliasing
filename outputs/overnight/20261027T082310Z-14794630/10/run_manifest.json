@@ -1,0 +1,35 @@
+{
+  "experiment": "10_near_collision_noise",
+  "args": {
+    "separations": [
+      0.0,
+      0.03,
+      0.3,
+      1.0
+    ],
+    "noise_levels": [
+      0.03,
+      0.1,
+      0.3
+    ],
+    "sample_sizes": [
+      8,
+      32,
+      128
+    ],
+    "priors": [
+      0.2,
+      0.5
+    ],
+    "target_gap": 1.0,
+    "num_seeds": 8,
+    "n_test": 1024,
+    "quadrature_order": 40,
+    "seed": 20261023,
+    "output_dir": "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/10"
+  },
+  "rows": 576,
+  "max_decomposition_reconstruction_error": 6.661338147750939e-16,
+  "max_risk_identity_error": 3.6751872399947927e-16,
+  "interpretation": "exact_bayes_risk is Bayes uncertainty from the noisy observation channel; GAD aliasing is a distinct training-null-space component"
+}

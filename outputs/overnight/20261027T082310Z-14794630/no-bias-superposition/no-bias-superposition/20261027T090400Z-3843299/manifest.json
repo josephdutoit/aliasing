@@ -1,0 +1,17 @@
+{
+  "experiment": "no-bias-superposition",
+  "script": "generalized_gad/superposition_no_bias.py",
+  "script_sha256": "a7ba03ee90577c32c76079763aba6ac2e5cc91f3fce3aef935b6696a3d71e1df",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/superposition_no_bias.py"
+  ],
+  "started_utc": "2026-10-27T09:04:00.853187+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:04:31.581219+00:00",
+  "figures": [
+    "clean_superposition_aliasing.png"
+  ]
+}

@@ -1,0 +1,4 @@
+Run: /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/superposition_gaussian.py
+Results: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/gaussian-superposition/gaussian-superposition/20261027T090332Z-3843127
+Log: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/gaussian-superposition/gaussian-superposition/20261027T090332Z-3843127/stdout.log
+Manifest: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/gaussian-superposition/gaussian-superposition/20261027T090332Z-3843127/manifest.json

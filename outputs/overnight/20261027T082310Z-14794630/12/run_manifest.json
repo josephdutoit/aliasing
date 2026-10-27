@@ -1,0 +1,15 @@
+{
+  "experiment": "12_matched_spectrum_tasks",
+  "config": {
+    "dimension": "8",
+    "pair_mass": "0.4",
+    "sample_sizes": "[4, 8, 16, 32, 64, 128]",
+    "num_seeds": "8",
+    "num_draws": "2",
+    "seed": "20261027",
+    "output_dir": "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/12"
+  },
+  "max_risk_identity_error": 9.935636177518852e-14,
+  "num_raw_rows": 576,
+  "note": "duplicate and rotated share all singular values; Bayes risk is target/support dependent"
+}

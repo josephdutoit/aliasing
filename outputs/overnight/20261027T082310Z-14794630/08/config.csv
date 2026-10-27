@@ -1,0 +1,2 @@
+feature_counts,bottlenecks,sample_sizes,joint_probabilities,tasks,marginal,encoder_samples,num_seeds,num_readout_draws,epochs,seed
+"8,10","2,4","16,64,128","0.0,0.1,0.2","sum,pair_contrast",0.2,1024,4,2,250,20261023

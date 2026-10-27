@@ -1,0 +1,53 @@
+Suite: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630
+[04] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/04_superposition_aliasing.py --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/04
+[04] completed (0.08 min)
+[05] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/05_static_dictionary_geometry.py --num-seeds 6 --sample-sizes 8,16,32 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/05
+[05] completed (0.12 min)
+[06] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/06_trained_sparse_feature_geometry.py --num-seeds 4 --epochs 250 --n-test 512 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/06
+[06] timed_out (25.01 min)
+[07] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/07_static_geometry_factorial.py --feature-counts 6,8 --sample-sizes 8,32,96 --joint-probabilities 0,0.1,0.2 --tasks sum,pair_contrast --num-seeds 6 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/07
+[07] completed (1.62 min)
+[08] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/08_trained_superposition_aliasing.py --feature-counts 8,10 --bottlenecks 2,4 --sample-sizes 16,64,128 --joint-probabilities 0,0.1,0.2 --tasks sum,pair_contrast --encoder-samples 1024 --num-seeds 4 --num-readout-draws 2 --epochs 250 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/08
+[08] failed (7.75 min)
+[09] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/09_double_descent_decomposition.py --widths 8,16,24,32,40 --sample-sizes 16,24,32,40,64 --covariances isotropic,spiked --num-seeds 8 --n-test 1024 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/09
+[09] completed (0.18 min)
+[10] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/10_near_collision_noise.py --separations 0,0.03,0.3,1 --noise-levels 0.03,0.1,0.3 --sample-sizes 8,32,128 --priors 0.2,0.5 --num-seeds 8 --n-test 1024 --quadrature-order 40 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/10
+[10] completed (0.13 min)
+[11] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/11_collision_mass_law.py --collision-masses 0.1,0.5,0.9 --conditional-masses 0.1,0.5,0.9 --separations 0,1e-3,0.1 --sample-sizes 8,32,128 --num-seeds 8 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/11
+[11] completed (0.12 min)
+[12] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/12_matched_spectrum_tasks.py --num-seeds 8 --num-draws 2 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/12
+[12] completed (0.1 min)
+[01] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/01_linear_aliasing_double_descent.py --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/01
+[01] completed (0.17 min)
+[02] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/02_random_feature_aliasing.py --num-seeds 6 --num-workers 12 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/02
+[02] failed (0.07 min)
+[03] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/experiments/03_feature_learning_mlp.py --num-seeds 6 --num-workers 12 --output-dir /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/03
+[03] completed (0.95 min)
+[glm-samplewise] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run glm-samplewise --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-samplewise -- --num-seeds 6 --num-workers 12
+[glm-samplewise] completed (1.63 min)
+[glm-featurewise] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run glm-featurewise --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-featurewise -- --num-seeds 6 --num-workers 12
+[glm-featurewise] completed (1.62 min)
+[frozen-superposition] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run frozen-superposition --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/frozen-superposition
+[frozen-superposition] completed (0.2 min)
+[learned-superposition] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run learned-superposition --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/learned-superposition
+[learned-superposition] completed (0.58 min)
+[gaussian-superposition] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run gaussian-superposition --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/gaussian-superposition
+[gaussian-superposition] completed (0.47 min)
+[no-bias-superposition] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run no-bias-superposition --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/no-bias-superposition
+[no-bias-superposition] completed (0.53 min)
+[embedded-complexity] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run embedded-complexity --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-complexity
+[embedded-complexity] completed (0.52 min)
+[embedded-mechanics] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run embedded-mechanics --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-mechanics
+[embedded-mechanics] completed (0.55 min)
+[embedded-regularization] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run embedded-regularization --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-regularization
+[embedded-regularization] completed (0.48 min)
+[embedded-heatmap] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/experiment_cli.py run embedded-heatmap --output-root /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/embedded-heatmap
+[embedded-heatmap] completed (0.5 min)
+[legacy-exponential_regression] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/ggad_old/exponential_regression.py
+[legacy-exponential_regression] completed (0.4 min)
+[legacy-logisitic_regression] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/ggad_old/logisitic_regression.py
+[legacy-logisitic_regression] completed (0.37 min)
+[legacy-poisson_regression] /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/ggad_old/poisson_regression.py
+[legacy-poisson_regression] completed (0.47 min)
+Final report: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/SUMMARY.md
+Shareable figures and aggregate tables: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/results_bundle.zip

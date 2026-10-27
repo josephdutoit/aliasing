@@ -1,0 +1,37 @@
+{
+  "experiment": "11_collision_mass_law",
+  "args": {
+    "collision_masses": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "conditional_masses": [
+      0.1,
+      0.5,
+      0.9
+    ],
+    "separations": [
+      0.0,
+      0.001,
+      0.1
+    ],
+    "tasks": "contrast,common",
+    "sample_sizes": [
+      8,
+      32,
+      128
+    ],
+    "target_gap": 1.0,
+    "num_seeds": 8,
+    "collision_tolerance": 1e-10,
+    "control_tolerance": 1e-10,
+    "seed": 20261023,
+    "output_dir": "/home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/11"
+  },
+  "rows": 1296,
+  "max_formula_error": 1.3877787807814457e-17,
+  "max_decomposition_reconstruction_error": 2.818648915508682e-16,
+  "max_risk_identity_error": 9.71445146547012e-17,
+  "checks_passed": true
+}

@@ -1,0 +1,17 @@
+{
+  "experiment": "embedded-regularization",
+  "script": "generalized_gad/superposition_full.py",
+  "script_sha256": "f283c926a3817dec49a749770ceaab1a9d4a0e7825100544dbf985b4c36a2377",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/superposition_full.py"
+  ],
+  "started_utc": "2026-10-27T09:05:37.001269+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:06:05.232144+00:00",
+  "figures": [
+    "regularization_comparison_aliasing.png"
+  ]
+}

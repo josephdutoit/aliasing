@@ -1,0 +1,2 @@
+dimension,feature_counts,max_sparsities,sample_sizes,families,num_seeds,seed,spread,collision_tolerance
+4,"4,5,8","1,2","8,16,32","orthogonal,random,structured",6,20261022,2,1e-12

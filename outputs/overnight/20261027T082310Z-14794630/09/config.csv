@@ -1,0 +1,2 @@
+widths,sample_sizes,input_dim,covariances,tasks,num_seeds,n_test,seed
+"8,16,24,32,40","16,24,32,40,64",20,"isotropic,spiked","first_pc,random",8,1024,20261023

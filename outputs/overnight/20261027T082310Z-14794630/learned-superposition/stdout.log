@@ -1,0 +1,4 @@
+Run: /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/superposition.py
+Results: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/learned-superposition/learned-superposition/20261027T090257Z-3842663
+Log: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/learned-superposition/learned-superposition/20261027T090257Z-3842663/stdout.log
+Manifest: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/learned-superposition/learned-superposition/20261027T090257Z-3842663/manifest.json

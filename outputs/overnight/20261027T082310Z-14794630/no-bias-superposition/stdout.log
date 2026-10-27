@@ -1,0 +1,4 @@
+Run: /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/superposition_no_bias.py
+Results: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/no-bias-superposition/no-bias-superposition/20261027T090400Z-3843299
+Log: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/no-bias-superposition/no-bias-superposition/20261027T090400Z-3843299/stdout.log
+Manifest: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/no-bias-superposition/no-bias-superposition/20261027T090400Z-3843299/manifest.json

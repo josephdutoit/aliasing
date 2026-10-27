@@ -1,0 +1,17 @@
+{
+  "experiment": "embedded-complexity",
+  "script": "generalized_gad/embedded_dd.py",
+  "script_sha256": "b1b2fbef062989307c2f19b174ea792d0045b3ab6e2eef03b47f58382c2ffd6f",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/embedded_dd.py"
+  ],
+  "started_utc": "2026-10-27T09:04:32.716970+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:05:02.466873+00:00",
+  "figures": [
+    "embedded_complexity_double_descent.png"
+  ]
+}

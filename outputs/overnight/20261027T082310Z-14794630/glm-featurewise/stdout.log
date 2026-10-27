@@ -1,0 +1,4 @@
+Run: /home/jcdutoit/aliasing/.venv/bin/python /home/jcdutoit/aliasing/generalized_gad/glm_gad_featurewise.py --num-seeds 6 --num-workers 12
+Results: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-featurewise/glm-featurewise/20261027T090108Z-3842098
+Log: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-featurewise/glm-featurewise/20261027T090108Z-3842098/stdout.log
+Manifest: /home/jcdutoit/aliasing/outputs/overnight/20261027T082310Z-14794630/glm-featurewise/glm-featurewise/20261027T090108Z-3842098/manifest.json

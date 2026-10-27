@@ -1,0 +1,17 @@
+{
+  "experiment": "gaussian-superposition",
+  "script": "generalized_gad/superposition_gaussian.py",
+  "script_sha256": "c7e415cf0cf2dd0faac5900ed7abdf34b6b3dc1b589dbb56fb694602f584625e",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/superposition_gaussian.py"
+  ],
+  "started_utc": "2026-10-27T09:03:32.488082+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:03:59.563748+00:00",
+  "figures": [
+    "corrected_superposition_aliasing.png"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "experiment": "embedded-mechanics",
+  "script": "generalized_gad/embedded_superposition.py",
+  "script_sha256": "b3fb8b1da26f6b4dad7f88e7c7db98278b9e9565b9c9d5bdb0fb9cdd61d539d7",
+  "command": [
+    "/home/jcdutoit/aliasing/.venv/bin/python",
+    "/home/jcdutoit/aliasing/generalized_gad/embedded_superposition.py"
+  ],
+  "started_utc": "2026-10-27T09:05:03.892871+00:00",
+  "status": "completed",
+  "notes": "Legacy script defaults and random seeds are defined in the script; see README.md.",
+  "returncode": 0,
+  "finished_utc": "2026-10-27T09:05:36.175999+00:00",
+  "figures": [
+    "superposition_mechanics.png"
+  ]
+}
