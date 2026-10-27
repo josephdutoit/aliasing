@@ -19,6 +19,8 @@ def main():
         rows = list(csv.DictReader(handle))
     if not rows:
         parser.error("mean.csv is empty")
+    if float(rows[0].get("gad_definition_version", "0")) != 2:
+        parser.error("legacy GAD labels: run relabel_gad_results.py into a new directory first")
     p = max(float(r["feature_count"]) for r in rows)
     rows = [r for r in rows if float(r["feature_count"]) == p]
     tasks = sorted({r["task"] for r in rows})

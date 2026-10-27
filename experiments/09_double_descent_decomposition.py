@@ -144,7 +144,7 @@ def main() -> None:
     metric_info = (
         ("test_mse", "held-out MSE"),
         ("aliasing", "GAD alias component"),
-        ("data_algorithm", "GAD data/algorithm component"),
+        ("data_insufficiency", "GAD data-insufficiency component"),
         ("training_condition_nonzero", "nonzero singular condition"),
     )
     ci_lookup = {

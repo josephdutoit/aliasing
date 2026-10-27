@@ -1,3 +1,5 @@
+> **GAD definition correction:** see [GAD_DEFINITIONS_AUDIT.md](GAD_DEFINITIONS_AUDIT.md). Historical `finite_support_gad` outputs reversed aliasing and data insufficiency. Old figures require relabeling before GAD interpretation.
+
 # Neural-network diagnostics
 
 ## Risk and hidden-feature geometry
@@ -20,8 +22,8 @@ difference between \(a\) and \((I-Q)a\) is exactly \(Z_{\rm te}Qa\).
 - `head_null_fraction`: \(\|Qa\|/\|a\|\).
 - `test_null_response_rms`: RMS test prediction difference \(Z_{\rm te}Qa\) for the learned head.
 - `test_null_response_relative`: that RMS divided by the RMS prediction from the learned head.
-- `alias_operator_norm`, `initial_alias_operator_norm`, `alias_operator_drift`: unnormalized spectral norms for the current/initial test-visible train-null operators and their difference.
-- `alias_operator_rms_norm`, `initial_alias_operator_rms_norm`, `alias_operator_rms_drift`: the corresponding norms divided by \(\sqrt{n_{\rm test}}\), making their scale comparable across test-set sizes.
+- `readout_null_operator_norm`, `initial_readout_null_operator_norm`, `readout_null_operator_drift`: unnormalized spectral norms for the current/initial test-visible train-null operators and their difference.
+- `readout_null_operator_rms_norm`, `initial_readout_null_operator_rms_norm`, `readout_null_operator_rms_drift`: the corresponding norms divided by \(\sqrt{n_{\rm test}}\), making their scale comparable across test-set sizes.
 - `head_minimum_norm_gap`: \(\|a-Z_{\rm tr}^\dagger y\|\). It equals the null-head norm only when the model interpolates; otherwise it also includes a row-space fit residual.
 - `interpolates`: whether training MSE is below the configured threshold.
 

@@ -111,9 +111,12 @@ def finite_support_gad(
     """Decompose finite-support prediction error for a frozen linear readout.
 
     The population-optimal linear readout defines the model projection. Its
-    component in the training null space is the alias component omitted by the
-    minimum-norm training fit. The remaining row-space coefficient shift is
-    reported separately. Prediction components need not be orthogonal, so all
+    component in the training null space is data insufficiency. Generalized
+    aliasing is the fitted leakage of the training target residual relative to
+    that same reference head. This matches MATHEMATICAL_RESULTS.md, section 1.
+    The reference residual supplies the unmodeled signal; without an explicit
+    unmodeled basis we report its realized effect, not the full alias operator.
+    Prediction components need not be orthogonal, so all
     pairwise cross terms are included.
     """
     if hidden_train.ndim != 2 or hidden_support.ndim != 2:
@@ -158,8 +161,9 @@ def finite_support_gad(
     elif population_head.shape != (hidden_support.shape[1],):
         raise ValueError("population_head shape does not match hidden representation")
     residual_model = hidden_support @ population_head - target_support
-    residual_alias = -(hidden_support @ (null_projector @ population_head))
-    residual_data = hidden_support @ (projector @ (fitted_head - population_head))
+    residual_data = -(hidden_support @ (null_projector @ population_head))
+    unmodeled_train = target_train - hidden_train @ population_head
+    residual_alias = hidden_support @ (pinv_train @ unmodeled_train)
     residual_total = residual_model + residual_alias + residual_data
     direct = hidden_support @ fitted_head - target_support
     weighted_mse = lambda values: float(np.dot(probabilities, values**2))
@@ -173,7 +177,8 @@ def finite_support_gad(
         "test_mse": weighted_mse(direct),
         "model_insufficiency": weighted_mse(residual_model),
         "aliasing": weighted_mse(residual_alias),
-        "data_algorithm": weighted_mse(residual_data),
+        "data_insufficiency": weighted_mse(residual_data),
+        "gad_definition_version": 2.0,
         "decomposition_reconstruction_error": float(np.max(np.abs(residual_total - direct))),
         "risk_identity_error": float(
             abs(
@@ -184,7 +189,7 @@ def finite_support_gad(
                 - sum(cross.values())
             )
         ),
-        "alias_operator_rms": float(
+        "data_insufficiency_operator_frobenius": float(
             np.sqrt(np.sum(probabilities[:, None] * (hidden_support @ null_projector) ** 2))
         ),
         **cross,

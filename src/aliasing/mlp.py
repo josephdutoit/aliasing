@@ -94,7 +94,9 @@ def hidden_aliasing_metrics(
     so a and (I-Q)a give identical training predictions. Their test
     prediction difference is exactly Z_test Q a. This is readout ambiguity
     conditional on the current hidden representation; it is not a measure
-    of total network risk or of feature superposition.
+    of total network risk or of feature superposition. The legacy function name
+    is retained, but Q-based metrics are not generalized aliasing; their
+    operator columns use readout_null_operator_* names.
     """
     model.eval()
     with torch.no_grad():
@@ -125,8 +127,8 @@ def hidden_aliasing_metrics(
         initial_projector = 0.5 * (initial_projector + initial_projector.T)
         initial_null_projector = identity - initial_projector
 
-        alias_operator = z_test @ null_projector
-        initial_alias_operator = initial_z_test @ initial_null_projector
+        readout_null_operator = z_test @ null_projector
+        initial_readout_null_operator = initial_z_test @ initial_null_projector
 
         head = model.fc2.weight.detach().reshape(-1)
         minimum_norm_head = z_pinv @ y_train
@@ -170,12 +172,12 @@ def hidden_aliasing_metrics(
         null_projector_drift = torch.linalg.matrix_norm(
             null_projector - initial_null_projector, ord=2
         ).item()
-        alias_operator_norm = torch.linalg.matrix_norm(alias_operator, ord=2).item()
-        initial_alias_operator_norm = torch.linalg.matrix_norm(
-            initial_alias_operator, ord=2
+        readout_null_operator_norm = torch.linalg.matrix_norm(readout_null_operator, ord=2).item()
+        initial_readout_null_operator_norm = torch.linalg.matrix_norm(
+            initial_readout_null_operator, ord=2
         ).item()
-        alias_operator_drift = torch.linalg.matrix_norm(
-            alias_operator - initial_alias_operator, ord=2
+        readout_null_operator_drift = torch.linalg.matrix_norm(
+            readout_null_operator - initial_readout_null_operator, ord=2
         ).item()
         test_null_response_rms = torch.sqrt(torch.mean(test_null_response**2)).item()
         test_prediction_rms = torch.sqrt(torch.mean(pred_test**2)).item()
@@ -195,14 +197,14 @@ def hidden_aliasing_metrics(
             "feature_transport_train": feature_transport_train,
             "feature_transport_test": feature_transport_test,
             "null_projector_drift": null_projector_drift,
-            "alias_operator_norm": alias_operator_norm,
-            "alias_operator_rms_norm": alias_operator_norm
+            "readout_null_operator_norm": readout_null_operator_norm,
+            "readout_null_operator_rms_norm": readout_null_operator_norm
             / np.sqrt(max(z_test.shape[0], 1)),
-            "initial_alias_operator_norm": initial_alias_operator_norm,
-            "initial_alias_operator_rms_norm": initial_alias_operator_norm
+            "initial_readout_null_operator_norm": initial_readout_null_operator_norm,
+            "initial_readout_null_operator_rms_norm": initial_readout_null_operator_norm
             / np.sqrt(max(z_test.shape[0], 1)),
-            "alias_operator_drift": alias_operator_drift,
-            "alias_operator_rms_drift": alias_operator_drift
+            "readout_null_operator_drift": readout_null_operator_drift,
+            "readout_null_operator_rms_drift": readout_null_operator_drift
             / np.sqrt(max(z_test.shape[0], 1)),
             "head_null_fraction": _relative_norm(null_head, head),
             # This is not generally the null-head norm when the model does
@@ -258,4 +260,3 @@ def _effective_rank(features: torch.Tensor) -> float:
     if total <= np.finfo(float).eps:
         return 0.0
     return float((total * total / squared.square().sum()).item())
-

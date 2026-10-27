@@ -65,11 +65,11 @@ def one(args: argparse.Namespace, seed: int, mass: float, rho: float,
     idx=rng.choice(3,size=n,replace=True,p=probabilities)
     gad=finite_support_gad(h[idx],y[idx],h,y,probabilities,population_head=population_head)
     formula=mass*rho*(1-rho)*args.target_gap**2 if epsilon==0.0 and task=="contrast" else 0.0
-    exact_alias_control=(epsilon==0.0 and task=="contrast" and abs(rho-0.5)<1e-14)
-    if exact_alias_control and gad["aliasing"] > args.control_tolerance:
+    exact_data_control=(epsilon==0.0 and task=="contrast" and abs(rho-0.5)<1e-14)
+    if exact_data_control and gad["data_insufficiency"] > args.control_tolerance:
         raise RuntimeError(
-            "balanced exact-collision control should have zero GAD alias component; "
-            f"got {gad['aliasing']:.6g} (seed={seed}, n={n})."
+            "balanced exact-collision control should have zero data-insufficiency component; "
+            f"got {gad['data_insufficiency']:.6g} (seed={seed}, n={n})."
         )
     return {
         "seed":float(seed),"collision_mass":mass,"conditional_positive_mass":rho,
@@ -81,7 +81,7 @@ def one(args: argparse.Namespace, seed: int, mass: float, rho: float,
         "population_head_second":float(population_head[1]),
         "population_head_risk":float(np.dot(probabilities,(h@population_head-y)**2)),
         "within_collision_tolerance":float(epsilon<=args.collision_tolerance),
-        "balanced_exact_alias_control":float(exact_alias_control),**gad,
+        "balanced_exact_data_control":float(exact_data_control),**gad,
     }
 
 

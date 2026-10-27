@@ -204,7 +204,7 @@ def main():
     for name, items in (("mean", means), ("std", stds), ("ci95", cis)):
         save_csv(args.output_dir/f"{name}.csv", items)
     fig, axes = plt.subplots(2, 2, figsize=(12, 9), constrained_layout=True)
-    for ax, metric in zip(axes.flat, ("test_mse", "model_insufficiency", "aliasing", "data_algorithm")):
+    for ax, metric in zip(axes.flat, ("test_mse", "model_insufficiency", "aliasing", "data_insufficiency")):
         for layer in args.layers:
             for width in (min(args.widths), max(args.widths)):
                 rr = sorted((r for r in means if r["layer"] == layer and r["pca_width"] == width),
