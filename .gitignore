@@ -12,3 +12,6 @@ outputs/learned_aliasing/
 learned-gad-*.log
 outputs/gad_mechanisms/
 gad-mechanism-*.log
+outputs/representation_models/
+outputs/model_smoke/
+gad-models-*.log
