@@ -100,6 +100,8 @@ def command(repo: Path, python: str, key: str, script: Path, overrides: list[str
         return [], f"script missing: {script}"
     if key == "15":
         return [], "requires experiment-14 checkpoint shards; submit mechanism_checks.sbatch separately"
+    if key == "16":
+        return [], "uses its own resumable model benchmark; submit representation_models.sbatch separately"
     if key in GENERALIZED:
         cmd = [python, str(script), "run", key, "--output-root", str(target)]
         if key.startswith("glm-"):

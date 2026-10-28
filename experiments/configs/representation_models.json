@@ -1,0 +1,7 @@
+[
+  {"name": "bottleneck", "family": "bottleneck", "compression": 4, "width": 16},
+  {"name": "mlp_wide", "family": "mlp", "widths": [16]},
+  {"name": "mlp_narrow", "family": "mlp", "widths": [4]},
+  {"name": "mlp_deep", "family": "mlp", "widths": [16, 16]},
+  {"name": "mlp_budget", "family": "mlp", "widths": [9]}
+]
