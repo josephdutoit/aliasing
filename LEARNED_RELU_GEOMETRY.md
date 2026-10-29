@@ -1,5 +1,9 @@
 # Learned ReLU geometry: overnight experiments for proof discovery
 
+If resuming numerical failures from job 14872283, use
+[LEARNED_GEOMETRY_RECOVERY.md](LEARNED_GEOMETRY_RECOVERY.md). It preserves
+completed worlds in a separate repaired run with explicit source provenance.
+
 These seven studies ask what JOINT TRAINING selects, then evaluate canonical
 GAD on independent readout samples. They do not repeat a random-feature study
 or assume that learned ReLUs suppress aliasing. All networks use NumPy CPU

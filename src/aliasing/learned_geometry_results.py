@@ -15,6 +15,8 @@ METRICS = ('test_mse', 'weighted_test_mse', 'model_insufficiency', 'mp_aliasing'
            'estimator_correction', 'n_times_aliasing', 'aliasing_to_J_ratio', 'residual_leverage_J',
            'residual_leverage_ratio', 'residual_top_leverage_decile_share', 'encoder_angle_canonical',
            'population_gradient_norm', 'reference_normal_equation_norm')
+ARITHMETIC_CROSS = tuple('cross_'+name+'__arithmetic_roundoff' for name in
+                        ('model_insufficiency', 'data_insufficiency', 'mp_aliasing', 'estimator_correction'))
 
 
 def seed_means(rows, table):
@@ -29,6 +31,17 @@ def seed_means(rows, table):
         groups += ['sample_size', 'estimator', 'target_feature']
     sums, counts = {}, {}
     for row in rows:
+        if table in ('strata', 'feature_errors') and 'test_mse' in row:
+            row = dict(row)
+            row.setdefault('arithmetic_roundoff', 0.)
+        if table == 'readouts':
+            # Old accepted rows had no separately measured arithmetic term.
+            # A zero here means omitted at the previous identity tolerance;
+            # the explicit measured flag distinguishes it from Decimal data.
+            row = dict(row)
+            for name in ('arithmetic_roundoff', 'arithmetic_roundoff_to_risk', 'arithmetic_roundoff_measured', 'gad_decimal_digits', *ARITHMETIC_CROSS):
+                row.setdefault(name, 0.)
+            row.setdefault('gad_arithmetic_reliable', 1.)
         key = tuple(row.get(name, '') for name in groups)
         a, b = sums.setdefault(key, {}), counts.setdefault(key, {})
         for name, value in row.items():
@@ -98,3 +111,5 @@ def summarize(shards, output, bootstrap):
     # gate labels across independently permuted units or treating starts as seeds.
     for table in ('starts', 'gates', 'parameters'):
         csv_write(output/(table+'.csv'), (row for shard in shards for row in read_rows(shard/(table+'.csv'))))
+    csv_write(output/'readouts_numerical_warnings.csv', (row for shard in shards for row in read_rows(shard/'readouts.csv')
+        if row.get('gad_arithmetic_reliable', 1.) == 0))

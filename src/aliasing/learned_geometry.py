@@ -11,7 +11,7 @@ import numpy as np
 from .learned_geometry_data import moments, pair_quadrature, sample, support_labels
 from .learned_geometry_training import initialize, loss_grad, train
 from .mechanism_checks import pinverse, select_ridge
-from .precision_gad import gad_metrics
+from .learned_geometry_precision import gad_metrics
 from .representation_models import make_model
 
 
@@ -190,35 +190,47 @@ def run_world(config, world):
                     candidate, penalty, _ = select_ridge(h, y, hv, yv, config['penalties'], weights)
                     candidates.append(('ridge_validation', candidate, penalty))
                 for estimator, candidate, penalty in candidates:
-                    values = gad_metrics(h, y, he, ye, reference, candidate=candidate, inverse=inverse, weights=weights)
+                    need_vectors = estimator == 'mp' and draw == 0 and n in (sizes[0], min(sizes, key=lambda n: abs(n-128)), sizes[-1])
+                    evaluated = gad_metrics(h, y, he, ye, reference, candidate=candidate, inverse=inverse, weights=weights, return_vectors=need_vectors)
+                    values = evaluated[0] if need_vectors else evaluated
+                    if need_vectors:
+                        component_vectors = evaluated[1]
+                        mp_vectors = {name: vector/root[:, None] for name, vector in component_vectors.items()}
                     values.update(n_times_aliasing=n*values['mp_aliasing'],
                         aliasing_to_J_ratio=n*values['mp_aliasing']/geometry['residual_leverage_J'] if geometry['residual_leverage_J'] > 1e-20 else float('nan'))
                     tables['readouts'].append(tag | dict(sample_size=n, draw=draw, estimator=estimator,
                         penalty=penalty, training_rank=rank, training_condition=condition,
                         fit_split='independent', **coverage, **values))
                 if draw == 0 and n in (sizes[0], min(sizes, key=lambda n: abs(n-128)), sizes[-1]):
-                    delta = inverse @ (y-h @ reference)
-                    alias = ht @ delta
-                    data = ht @ ((inverse @ h-np.eye(h.shape[1])) @ reference)
-                    error = ht @ (inverse @ y)-yt
+                    alias = mp_vectors['mp_aliasing']
+                    data = mp_vectors['data_insufficiency']
+                    model_residual = mp_vectors['model_insufficiency']
+                    arithmetic = mp_vectors.get('arithmetic_roundoff', np.zeros_like(alias))
+                    # Match the same weighted float64 predictor used for the
+                    # authoritative global metrics, including its rounding.
+                    error = (he @ (inverse @ y)-ye)/root[:, None]
                     for feature in range(spec['features']):
-                        vectors = [data[:, feature], alias[:, feature], -residual[:, feature]]
+                        vectors = [data[:, feature], alias[:, feature], model_residual[:, feature], arithmetic[:, feature]]
                         energies = [float(test_mass @ v**2) for v in vectors]
                         tables['feature_errors'].append(tag | dict(sample_size=n, estimator='mp', target_feature=feature,
                             test_mse=float(test_mass @ error[:, feature]**2), data_insufficiency=energies[0],
                             mp_aliasing=energies[1], model_insufficiency=energies[2],
-                            cross_total=float(test_mass @ error[:, feature]**2)-sum(energies)))
+                            arithmetic_roundoff=energies[3],
+                            cross_total=float(sum(2*(test_mass @ (a*b)) for i, a in enumerate(vectors) for b in vectors[i+1:]))))
                     labels = support_labels(xt)
                     for label in np.unique(labels):
                         selected = labels == label
                         probability = test_mass[selected].sum()
                         conditional_mass = test_mass[selected]/probability
                         tables['strata'].append(tag | dict(sample_size=n, stratum=int(label), probability=float(probability),
-                            model_insufficiency=float(conditional_mass @ np.mean(residual[selected]**2, axis=1)),
+                            model_insufficiency=float(conditional_mass @ np.mean(model_residual[selected]**2, axis=1)),
                             mp_aliasing=float(conditional_mass @ np.mean(alias[selected]**2, axis=1)),
                             data_insufficiency=float(conditional_mass @ np.mean(data[selected]**2, axis=1)),
+                            arithmetic_roundoff=float(conditional_mass @ np.mean(arithmetic[selected]**2, axis=1)),
                             test_mse=float(conditional_mass @ np.mean(error[selected]**2, axis=1)),
-                            cross_total=float(conditional_mass @ np.mean(error[selected]**2-residual[selected]**2-alias[selected]**2-data[selected]**2, axis=1)),
+                            cross_total=float(sum(2*(conditional_mass @ np.mean(a[selected]*b[selected], axis=1))
+                                for i, a in enumerate([data, alias, model_residual, arithmetic])
+                                for b in [data, alias, model_residual, arithmetic][i+1:])),
                             leverage=float(conditional_mass @ leverage[selected])))
                     if detailed:
                         base_alias = alias
