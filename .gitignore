@@ -15,3 +15,7 @@ gad-mechanism-*.log
 outputs/representation_models/
 outputs/model_smoke/
 gad-models-*.log
+outputs/learned_relu_geometry/
+outputs/relu_geometry_smoke/
+gad-relu-*.log
+relu-repair-*.log
