@@ -7,7 +7,8 @@ import time
 import numpy as np
 
 from .controlled_superposition import importance, linear_oracle, problem, sample
-from .mechanism_checks import gad_metrics, normalized_probe_gain, pinverse, select_ridge, sensitivity
+from .mechanism_checks import normalized_probe_gain, pinverse, select_ridge, sensitivity
+from .precision_gad import gad_metrics
 from .representation_models import DenseRepresentation, make_model, train_model
 
 
@@ -140,7 +141,11 @@ def run_world(config, seed_index, active_count, task_profile):
                 inverse, training_rank, training_condition = pinverse(h)
             else:
                 _, training_rank, training_condition = pinverse(h)
-            metrics = gad_metrics(h, y, ht, yt, reference, candidate, inverse, weights)
+            try:
+                metrics = gad_metrics(h, y, ht, yt, reference, candidate, inverse, weights)
+            except (AssertionError, ArithmeticError) as exc:
+                raise ArithmeticError(f'{tag}, n={n}, split={split}, draw={draw}, estimator={estimator}: {exc}') from exc
+            controls['extended_precision_evaluations'] = controls.get('extended_precision_evaluations', 0)+metrics['gad_extended_precision']
             prediction = ht @ (inverse @ y if candidate is None else candidate)
             feature_errors = latent_errors(prediction, yt, spec)
             metrics.update(latent_mean_normalized_mse=float(feature_errors.mean()),
