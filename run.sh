@@ -30,6 +30,19 @@ if [[ ! -f "$SCRIPT" ]]; then
     exit 1
 fi
 
+if [[ "$(basename "$SCRIPT")" == "17_learned_relu_geometry.py" ]]; then
+    cd "$REPO_DIR"
+    export MPLBACKEND=Agg OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
+    ARGS=(--output-dir "$OUTPUT_ROOT/learned_relu_geometry" --workers "$NUM_WORKERS")
+    if [[ "${GAD_GEOMETRY_RESUME:-0}" == 1 ]]; then
+        ARGS+=(--resume)
+    else
+        ARGS+=(--profile "${GAD_GEOMETRY_PROFILE:-overnight}" --experiments "${GAD_GEOMETRY_EXPERIMENTS:-all}")
+    fi
+    "$PYTHON" "$SCRIPT" "${ARGS[@]}"
+    exit 0
+fi
+
 if [[ "$(basename "$SCRIPT")" == "04_superposition_aliasing.py" ]]; then
     mkdir -p "$OUTPUT_ROOT/superposition"
     cd "$REPO_DIR"

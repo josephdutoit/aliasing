@@ -8,3 +8,10 @@
 - [Review of overnight job 14794630](OVERNIGHT_RESULTS_REVIEW.md)
 - [Generalized GAD experiment guide](generalized_gad/README.md)
 - [Chapter 2 spectral experiments](CHAPTER2_SPECTRAL_EXPERIMENTS.md)
+# Learned ReLU geometry
+
+See [LEARNED_RELU_GEOMETRY.md](LEARNED_RELU_GEOMETRY.md) for seven new
+learned-representation studies, SLURM array commands, canonical GAD checks,
+and the compact result bundles to return. The default overnight profile
+contains 1,672 worlds; begin with the smoke profile.
+
