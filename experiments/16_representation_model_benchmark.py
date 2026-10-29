@@ -111,7 +111,7 @@ def configure(args, saved=None):
 def code_fingerprint(config):
     files = [Path(__file__), Path(__file__).with_name('plot_representation_model_benchmark.py')]
     files += [ROOT/'src'/'aliasing'/(name+'.py') for name in (
-        'controlled_superposition', 'mechanism_checks', 'representation_models', 'representation_benchmark', 'benchmark_results')]
+        'controlled_superposition', 'mechanism_checks', 'precision_gad', 'representation_models', 'representation_benchmark', 'benchmark_results')]
     for module_name in config['model_modules']:
         module = importlib.import_module(module_name)
         source = Path(inspect.getfile(module)).resolve()

@@ -10,6 +10,7 @@ from aliasing.controlled_superposition import features, initialize, loss_grad, p
 from aliasing.mechanism_checks import gad_metrics, pinverse
 from aliasing.representation_benchmark import TABLE_GROUPS, output_floor, run_world
 from aliasing.representation_models import default_models, make_model, register_model, train_model
+from aliasing.precision_gad import gad_metrics as precision_gad_metrics
 
 
 def runner():
@@ -160,6 +161,42 @@ def test_omnibus_suite_directs_model_runs_to_the_dedicated_batch_script():
     script = path.with_name('16_representation_model_benchmark.py')
     command, reason = module.command(path.parents[1], 'python', '16', script, None, Path('output'), 28)
     assert not command and 'representation_models.sbatch' in reason
+
+
+def test_precision_retry_preserves_existing_successful_gad_results_exactly():
+    rng = np.random.default_rng(918)
+    for n in (3, 30):
+        h, ht = rng.normal(size=(n, 7)), rng.normal(size=(60, 7))
+        y, yt, reference = rng.normal(size=(n, 4)), rng.normal(size=(60, 4)), rng.normal(size=(7, 4))
+        for candidate in (None, rng.normal(size=(7, 4))):
+            original = gad_metrics(h, y, ht, yt, reference, candidate)
+            checked = precision_gad_metrics(h, y, ht, yt, reference, candidate)
+            assert checked['gad_extended_precision'] == 0
+            for key, value in original.items():
+                assert checked[key] == value or (np.isnan(value) and np.isnan(checked[key])), key
+
+
+def test_precision_retry_recovers_cancelling_gad_terms_without_changing_predictions():
+    rng = np.random.default_rng(1)
+    u = np.linalg.qr(rng.normal(size=(17, 17)))[0]
+    v = np.linalg.qr(rng.normal(size=(17, 17)))[0]
+    h = (u*np.geomspace(1., 1e-5, 17)) @ v.T
+    ht = rng.normal(size=(64, 17))
+    reference = rng.normal(size=(17, 3))*1e4
+    y, yt = h @ reference, ht @ reference
+    inverse = pinverse(h)[0]
+    try:
+        gad_metrics(h, y, ht, yt, reference, inverse=inverse)
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError('the regression case must reproduce float64 cancellation')
+    result = precision_gad_metrics(h, y, ht, yt, reference, inverse=inverse)
+    assert result['gad_extended_precision'] == 1
+    assert result['test_mse'] == float(np.mean((ht @ (inverse @ y)-yt)**2))
+    assert result['prediction_identity_relative_error'] <= 1e-7
+    assert result['risk_identity_absolute_error'] <= 1e-7
+    assert result['estimator_correction'] == 0.
 
 
 def test_small_world_produces_all_scientific_tables_and_controls():

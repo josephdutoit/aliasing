@@ -148,6 +148,27 @@ baseline, including on ridge rows; it is not ridge's actual residual leakage.
 The reported risk uses direct predictions. Identity diagnostics retain
 absolute, risk-relative and component-scaled errors and cancellation ratios.
 
+If the float64 identity check fails, experiment 16 retries the same GAD
+contractions in extended precision. The fitted inverse, selected head,
+predictions, singular-value cutoff and check tolerances are unchanged.
+`gad_extended_precision=1` identifies retried rows; the per-world control
+`extended_precision_evaluations` counts retried readout evaluations. A failed
+retry still stops that world. This requires a platform where NumPy longdouble
+has more precision than float64, as on the Linux node and validation runtime.
+
+This addresses the single failure in job 14840288 (143/144 worlds completed):
+seed 8, k=8, wide MLP with its final gate removed, independent MP readout n=17,
+draw 2. Its design condition number was about 1.23e7 and the reference head
+norm about 1.50e4. Float64 evaluation produced a spurious prediction-identity
+gap of 1.67e-7 although direct test MSE was 3.68e-20. Extended evaluation
+reduced the gap to 1.56e-10 without altering the predictor. Those values are
+from reproduction with NumPy 2.3.5; floating-point details can vary by build.
+
+The precision fix changes the run fingerprint. Start a new output directory
+with `sbatch representation_models.sbatch`; strict resume of the old run is
+intentionally rejected. Old successful results are preserved in their original
+directory. Experiments 14/15 keep their original numerical evaluator.
+
 Finite reference fits are estimated projections. Their model energy and tiny
 aliasing terms need convergence checks; cross terms are not assumed zero.
 The reference tables compare prediction and alias-vector differences to the
