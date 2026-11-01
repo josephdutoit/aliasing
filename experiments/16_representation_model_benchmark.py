@@ -139,9 +139,10 @@ def shard_complete(directory):
     return True
 
 
-def save_world(directory, result, seed, k, profile):
+def save_world(directory, result, seed, k, profile, table_groups=None):
+    groups = TABLE_GROUPS if table_groups is None else table_groups
     directory.mkdir(parents=True, exist_ok=True)
-    for table in TABLE_GROUPS:
+    for table in groups:
         csv_write(directory/(table+'.csv'), result['tables'][table])
     checkpoint = directory/'checkpoints.npz'
     temporary = directory/'checkpoints.npz.tmp'
@@ -149,7 +150,7 @@ def save_world(directory, result, seed, k, profile):
         np.savez_compressed(handle, **result['states'])
     temporary.replace(checkpoint)
     artifacts = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
-                 for path in [checkpoint, *(directory/(name+'.csv') for name in TABLE_GROUPS)]}
+                 for path in [checkpoint, *(directory/(name+'.csv') for name in groups)]}
     json_write(directory/'complete.json', dict(seed=seed, active_count=k, task_profile=profile,
         seconds=result['seconds'], controls=result['controls'], artifacts=artifacts))
 
@@ -248,3 +249,4 @@ def main():
 
 if __name__ == '__main__':
     raise SystemExit(main())
+

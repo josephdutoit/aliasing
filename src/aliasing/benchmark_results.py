@@ -16,6 +16,11 @@ CI_METRICS = ('test_mse', 'weighted_test_mse', 'model_insufficiency', 'mp_aliasi
               'isotropic_prediction_energy', 'worst_training_rms_gain', 'rms_gain',
               'reference_prediction_difference_mse', 'alias_vector_difference_mse')
 
+CI_METRICS += ('residual_train_mse', 'latent_jacobian_overlap', 'latent_jacobian_norm_min') + tuple(
+    'cross_'+left+'__'+right
+    for i, left in enumerate(('model_insufficiency', 'data_insufficiency', 'mp_aliasing', 'estimator_correction'))
+    for right in ('model_insufficiency', 'data_insufficiency', 'mp_aliasing', 'estimator_correction')[i+1:])
+
 
 def json_write(path, value):
     path = Path(path)
@@ -47,11 +52,11 @@ def read_rows(path):
             yield row
 
 
-def summarize(shards, output, bootstrap):
+def summarize(shards, output, bootstrap, table_groups=None):
     """A seed is the resampling unit, never a draw, rotation or probe direction."""
     output = Path(output)
     rng = np.random.default_rng(16027)
-    for table, groups in TABLE_GROUPS.items():
+    for table, groups in (TABLE_GROUPS if table_groups is None else table_groups).items():
         collapsed = {}
         for shard in shards:
             for row in read_rows(shard/(table+'.csv')):
@@ -79,6 +84,7 @@ def summarize(shards, output, bootstrap):
                 values = values[np.isfinite(values)]
                 mean[metric] = float(values.mean()) if len(values) else float('nan')
                 mean[metric+'_num_seeds'] = len(values)
+                mean[metric+'_std'] = float(values.std(ddof=1)) if len(values) > 1 else float('nan')
                 if metric in ('test_mse', 'mp_aliasing') and len(values):
                     mean[metric+'_median'] = float(np.median(values))
                     mean[metric+'_max'] = float(values.max())
@@ -92,7 +98,7 @@ def summarize(shards, output, bootstrap):
             cis.append(ci)
         csv_write(output/(table+'_mean.csv'), means)
         csv_write(output/(table+'_ci95.csv'), cis)
-        if table in ('history', 'feature_recovery'):
+        if table in ('history', 'feature_recovery', 'alias_modes'):
             continue
         lookup = {tuple(row[name] for name in groups)+(row['seed'],): row for row in seed_rows}
         paired = []
@@ -103,7 +109,7 @@ def summarize(shards, output, bootstrap):
                 references += [tag | dict(method='random_relu'), tag | dict(method='learned_linear')]
                 if tag['architecture'] != 'bottleneck':
                     references.append(tag | dict(architecture='bottleneck'))
-            elif tag['method'] in ('rotated_relu', 'rotated_relu_rate_matched', 'no_final_gate'):
+            elif tag['method'] in ('rotated_relu', 'rotated_relu_rate_matched', 'no_final_gate') or str(tag['method']).startswith('threshold_'):
                 references.append(tag | dict(method='learned_relu'))
             if table == 'readouts' and tag['estimator'] == 'ridge_validation':
                 references.append(tag | dict(estimator='mp'))
@@ -123,3 +129,4 @@ def summarize(shards, output, bootstrap):
                         candidate_minus_reference=float(np.mean(differences)),
                         ci95_low=float(np.quantile(boots, .025)), ci95_high=float(np.quantile(boots, .975))))
         csv_write(output/(table+'_paired.csv'), paired)
+

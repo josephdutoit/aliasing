@@ -33,6 +33,10 @@ def output_floor(spec, dimension):
 
 
 def _variants(config, spec, xr, yr, weights, seed, tables, metadata, states, controls):
+    # Optional common UNLABELED calibration inputs keep random maps identical
+    # across labeled representation-data budgets in the survey.
+    calibration = xr if not config.get('n_initialization') else sample(
+        spec, config['n_initialization'], seed+10000019*spec['k']+6)[0]
     for architecture in config['models']:
         # Architecture list ordering must not affect initialization or data.
         import hashlib
@@ -42,13 +46,20 @@ def _variants(config, spec, xr, yr, weights, seed, tables, metadata, states, con
         learned_relu = None
         for activation in ('linear', 'relu'):
             model = make_model(architecture, activation)
-            initial = model.initialize(xr, spec['p'], initialization_seed)
-            trained, history = train_model(model, initial, xr, yr, weights, config['steps'],
+            initial = model.initialize(calibration, spec['p'], initialization_seed)
+            training_weights = weights.copy()
+            selected = config.get('training_tasks', 'all')
+            if selected != 'all':
+                training_weights[1 if selected == 'first' else spec['p']//2:] = 0.
+            trained, history = train_model(model, initial, xr, yr, training_weights, config['steps'],
                 config['batch_size'], config['learning_rate'], config['weight_decay'], optimization_seed)
             tag = metadata | dict(architecture=architecture['name'], method='learned_'+activation)
             tables['history'].extend(tag | row for row in history)
             for key, value in trained.items():
                 states[f'{architecture["name"]}__{activation}__{key}'] = value
+            if config.get('survey_diagnostics'):
+                for key, value in initial.items():
+                    states[f'{architecture["name"]}__{activation}__initial__{key}'] = value
             yield architecture['name'], 'random_'+activation, 0, model, initial, False
             yield architecture['name'], 'learned_'+activation, 0, model, trained, True
             if activation == 'relu':
@@ -56,6 +67,12 @@ def _variants(config, spec, xr, yr, weights, seed, tables, metadata, states, con
         model, trained = learned_relu
         yield architecture['name'], 'no_final_gate', 0, model.linearized(), trained, False
         desired = float(np.mean(model.preactivation(xr, trained) > 0))
+        # Calibration uses representation-training inputs only. Positive offsets
+        # raise thresholds. Zero is the original map and is never duplicated.
+        for offset in config.get('threshold_offsets', []):
+            if offset and hasattr(model, 'shift_final_bias'):
+                shifted = model.shift_final_bias(trained, offset*model.preactivation(xr, trained).std(axis=0))
+                yield architecture['name'], 'threshold_'+format(offset, 'g'), 0, model, shifted, False
         for rid in range(1, config['rotations']+1):
             q = np.linalg.qr(np.random.default_rng(seed+1009*rid+salt).normal(size=(model.width, model.width)))[0]
             rotated = model.rotate(trained, q)
@@ -103,6 +120,9 @@ def run_world(config, seed_index, active_count, task_profile):
     weights = importance(task_profile, spec['p'], config['secondary_weight'])
     meta = dict(seed=seed_index, active_count=active_count, task_profile=task_profile)
     tables = {name: [] for name in TABLE_GROUPS}
+    if config.get('survey_diagnostics'):
+        from .survey_diagnostics import EXTRA_GROUPS
+        tables.update({name: [] for name in EXTRA_GROUPS})
     states = dict(embedding=spec['embedding'], teacher=spec['teacher'], target_scales=spec['scales'],
                   latent_mean=spec['mean'], importance=weights)
     controls = {}
@@ -133,6 +153,9 @@ def run_world(config, seed_index, active_count, task_profile):
             positive_preactivation_fraction=float(np.mean(pre > 0)),
             latent_features_below_0p1=int(np.sum(errors < .1)), latent_worst_normalized_mse=float(errors.max()),
             latent_mean_normalized_mse=float(errors.mean()), input_second_moment=float(np.mean(np.sum(xt**2, axis=1)))))
+        if config.get('survey_diagnostics'):
+            from .survey_diagnostics import latent_geometry
+            tables['geometry'][-1].update(latent_geometry(model, params, spec, xt))
         quadratic_reference = np.linalg.lstsq(hf, psi_f, rcond=None)[0]
         structured = psi_p-hp @ quadratic_reference
 
@@ -160,6 +183,22 @@ def run_world(config, seed_index, active_count, task_profile):
             if split == 'independent' and n in config['detail_sample_sizes']:
                 tables['feature_recovery'].extend(tag | dict(sample_size=n, readout_draw=draw, estimator=estimator,
                     feature=i, normalized_mse=float(value)) for i, value in enumerate(feature_errors))
+                if config.get('survey_diagnostics'):
+                    # The SAME global reference head is sliced by task. No
+                    # conditional or per-group refit changes the comparator.
+                    for task in range(y.shape[1]):
+                        task_metrics = gad_metrics(h, y[:, task:task+1], ht, yt[:, task:task+1],
+                            reference[:, task:task+1],
+                            None if candidate is None else candidate[:, task:task+1], inverse)
+                        tables['task_readouts'].append(tag | dict(sample_size=n, readout_draw=draw,
+                            fit_split=split, estimator=estimator, feature=task,
+                            training_task_weight=float(weights[task] if config.get('training_tasks', 'all') == 'all'
+                                or task < (1 if config['training_tasks'] == 'first' else spec['p']//2) else 0.),
+                            **task_metrics))
+                    if draw == 0 and estimator == 'mp':
+                        from .survey_diagnostics import alias_modes
+                        tables['alias_modes'].extend(tag | dict(sample_size=n, mode=i, **row)
+                            for i, row in enumerate(alias_modes(h, ht, y-h @ reference)))
             return inverse
 
         if native:
@@ -200,3 +239,4 @@ def run_world(config, seed_index, active_count, task_profile):
                     if control > 1e-7:
                         raise AssertionError('controlled readout perturbation response failed')
     return dict(tables=tables, states=states, controls=controls, seconds=time.monotonic()-started)
+
