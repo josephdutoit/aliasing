@@ -8,3 +8,4 @@
 - [Review of overnight job 14794630](OVERNIGHT_RESULTS_REVIEW.md)
 - [Generalized GAD experiment guide](generalized_gad/README.md)
 - [Chapter 2 spectral experiments](CHAPTER2_SPECTRAL_EXPERIMENTS.md)
+- [Chapter 2 v3 static GAD run guide](CHAPTER2_V3_RUN_GUIDE.md)
