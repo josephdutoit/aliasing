@@ -1,6 +1,7 @@
 {
   "profile": "smoke",
   "seed": 20261104,
+  "multiplicity_plan": "Pipeline validation only; smoke contrasts are not inferential.",
   "n_test": 512,
   "n_oracle": 2048,
   "bootstrap_replicates": 200,

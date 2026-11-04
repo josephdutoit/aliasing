@@ -899,6 +899,7 @@ def report_files(run_dir: Path, plan: dict[str, Any], manifest: dict[str, Any],
     top_contrasts = sorted(contrast_rows, key=lambda row: abs(as_float(row.get("mean_difference")) or 0.0), reverse=True)[:5]
     highlight_text = "\n".join(f"- {format_contrast(row)}" for row in top_contrasts) or "- No completed paired contrast is available."
     report_status = "PARTIAL" if partial else "COMPLETE"
+    multiplicity_plan = plan["config"].get("multiplicity_plan", "No multiplicity plan was recorded in this profile.")
 
     morning = f"""# Chapter 2 v3 morning readme
 
@@ -929,6 +930,7 @@ The available results contain {total_rows} rows and {key_contrasts} representati
 - Per-lane job statuses: {actual_completed_lanes}.
 - Observed Slurm resources are recorded in shard provenance. No resource value is inferred from a profile target.
 - Confirmation is a fresh seed range only if this profile is `confirmation`; otherwise findings remain exploratory.
+- Multiplicity plan: {multiplicity_plan}
 
 ## 3. Validated foundations
 
@@ -988,6 +990,8 @@ This package studies whether frozen learned linear representations change the in
 GAD-v3 uses the population feature second moment `Sigma = E[m(x)m(x)^T]`, the exact synthetic population oracle `theta_star`, and the intrinsic sample kernel `K = H Sigma^-1 H.T`. For a full-row-rank interpolating design, `A = 1/2 r.T K^-1 r`; the population risk is `R(theta_e)=M+A+D_e`, with signed readout displacement `S_e=D_e-D0`. Here `D0` is the squared population-metric norm of the oracle component in the sample nullspace. For `n>d`, only the general risk `M + 1/2 ||theta_hat-theta_star||_Sigma^2` is reported; the interpolating components are `NA`. These definitions are tagged `population_metric_v3` and remain separate from the repository's legacy GAD-v2 prediction-space components. Lane A compares observed `A` and `D0` with their respective Gaussian expectations.
 
 **Run status:** {report_status}; {completed_jobs}/{expected_jobs} jobs; {total_rows} trial rows; {valid_rows} valid rows; {failures} invalid rows. Profile `{plan['profile']}` is exploratory unless the manifests document a fresh confirmation run. Cached real-model activation probing is optional and is marked `SKIPPED_DEPENDENCY` when absent. No Slurm resources are assumed; consult actual shard provenance.
+
+Multiplicity plan: {multiplicity_plan}
 
 Inspect `MANIFEST.json` and `AUDIT_PASS.json` first, then `failure_rates.csv`, lane-level `run_manifest.json`, `seed_means.csv`, `paired_contrasts.csv`, and `figure_data/`. Curves report the row count and exact-versus-estimated oracle status in figure titles. Read `D1_samplewise_rank_condition.png` and each row's `rank_H` before interpreting an interpolation peak. Check `trial_valid`, `status`, `warning_codes`, `is_oracle_exact`, and `oracle_reference_size`; do not remove singular or failed cells. The historical GAD naming caveat is preserved in `GAD_DEFINITIONS_AUDIT.md` and the pre-edit `REPO_AUDIT.md`.
 

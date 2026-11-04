@@ -1,6 +1,7 @@
 {
   "profile": "confirmation",
   "seed": 20261104,
+  "multiplicity_plan": "Fresh-seed confirmation of the predeclared B k=N versus Gaussian normalized-A family, C learned-versus-random normalized-A family, D1 learned-versus-random total-risk family, and D2 independently-learned-versus-width-matched-random total-risk family. Report all per-cell 95% seed-bootstrap intervals as unadjusted descriptive intervals; interpret each family as a whole and do not claim cellwise significance from the most extreme contrast.",
   "n_test": 16384,
   "n_oracle": 32768,
   "bootstrap_replicates": 5000,

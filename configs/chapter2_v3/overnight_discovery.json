@@ -1,6 +1,7 @@
 {
   "profile": "overnight_discovery",
   "seed": 20261104,
+  "multiplicity_plan": "Exploratory families are B k=N versus Gaussian on normalized A, C learned versus random on normalized A, D1 learned versus random on total risk, and D2 independently learned versus width-matched random on total risk. Per-cell 95% seed-bootstrap intervals are unadjusted and descriptive; confirmation uses fresh seeds and the same predeclared families without selecting cells by discovery significance.",
   "n_test": 8192,
   "n_oracle": 16384,
   "bootstrap_replicates": 2000,
